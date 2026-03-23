@@ -17,7 +17,7 @@ public class SwaggerConfig {
                         .version("1.0")
                         .description("API para controle de pets, clientes e agendamentos de banho e tosa.")
                         .contact(new Contact()
-                                .name("Gilbert | Dev")
+                                .name("Gilberto | Dev")
                                 .email("gilbertomascena@gmail.com")
                                 .url("https://github.com/Gilberto-Mascena")));
     }
