@@ -2,12 +2,15 @@ package br.com.gilbertodev.apipetshop.dtos;
 
 import br.com.gilbertodev.apipetshop.entities.Pet;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;
+
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -24,8 +27,9 @@ public class PetRequestDTO {
 
     private String raca;
 
-    @PositiveOrZero(message = "A idade do pet deve ser um número positivo ou zero")
-    private Integer idade;
+    @NotNull(message = "A data de nascimento do pet é obrigatória")
+    @PastOrPresent(message = "A data de nascimento não pode ser no futuro")
+    private LocalDate dataNascimento;
     private String observacoes;
 
     public Pet toEntity() {

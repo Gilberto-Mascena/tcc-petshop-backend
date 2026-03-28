@@ -6,6 +6,8 @@ import br.com.gilbertodev.apipetshop.entities.Pet;
 import br.com.gilbertodev.apipetshop.repositories.PetRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 
 @Service
@@ -28,7 +30,7 @@ public class PetService {
                     pet.setNome(petAtualizado.getNome());
                     pet.setEspecie(petAtualizado.getEspecie());
                     pet.setRaca(petAtualizado.getRaca());
-                    pet.setIdade(petAtualizado.getIdade());
+                    pet.setDataNascimento(petAtualizado.getDataNascimento());
                     pet.setObservacoes(petAtualizado.getObservacoes());
                     return toPetResponseDTO(petRepository.save(pet));
                 })
@@ -53,13 +55,18 @@ public class PetService {
     }
 
     private PetResponseDTO toPetResponseDTO(Pet pet) {
+        Integer idadeCalculada = null;
+        if (pet.getDataNascimento() != null) {
+            idadeCalculada = Period.between(pet.getDataNascimento(), LocalDate.now()).getYears();
+        }
         return new PetResponseDTO(
                 pet.getId(),
                 pet.getNome(),
                 pet.getEspecie(),
                 pet.getRaca(),
-                pet.getIdade(),
-                pet.getObservacoes()
+                idadeCalculada,
+                pet.getObservacoes(),
+                pet.getDataCriacao()
         );
     }
 }
