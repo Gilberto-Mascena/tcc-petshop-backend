@@ -20,6 +20,9 @@ public class PetService {
     }
 
     public PetResponseDTO salvar(PetRequestDTO petRequestDTO) {
+        if (petRequestDTO.getDataNascimento().isBefore(LocalDate.now().minusYears(30))) {
+            throw new RuntimeException("Data de nascimento inválida: o pet não pode ter mais de 30 anos.");
+        }
         Pet pet = petRequestDTO.toEntity();
         return toPetResponseDTO(petRepository.save(pet));
     }
