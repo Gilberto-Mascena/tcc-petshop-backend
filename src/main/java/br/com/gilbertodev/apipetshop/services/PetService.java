@@ -3,6 +3,9 @@ package br.com.gilbertodev.apipetshop.services;
 import br.com.gilbertodev.apipetshop.dtos.PetRequestDTO;
 import br.com.gilbertodev.apipetshop.dtos.PetResponseDTO;
 import br.com.gilbertodev.apipetshop.entities.Pet;
+import br.com.gilbertodev.apipetshop.exceptions.BusinessException;
+import br.com.gilbertodev.apipetshop.exceptions.ObjectNotFoundException;
+import br.com.gilbertodev.apipetshop.exceptions.PetMessages;
 import br.com.gilbertodev.apipetshop.repositories.PetRepository;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +24,9 @@ public class PetService {
 
     public PetResponseDTO salvar(PetRequestDTO petRequestDTO) {
         if (petRequestDTO.getDataNascimento().isBefore(LocalDate.now().minusYears(30))) {
-            throw new RuntimeException("Data de nascimento inválida: o pet não pode ter mais de 30 anos.");
+            throw new BusinessException(
+                    PetMessages.PET_IDADE_INVALIDA
+            );
         }
         Pet pet = petRequestDTO.toEntity();
         return toPetResponseDTO(petRepository.save(pet));
@@ -37,7 +42,8 @@ public class PetService {
                     pet.setObservacoes(petAtualizado.getObservacoes());
                     return toPetResponseDTO(petRepository.save(pet));
                 })
-                .orElseThrow(() -> new RuntimeException("Pet não encontrado com id: " + id));
+                .orElseThrow(() -> new ObjectNotFoundException(
+                        PetMessages.PET_NAO_ENCONTRADO));
     }
 
     public List<PetResponseDTO> listarTodos() {
@@ -49,11 +55,16 @@ public class PetService {
 
     public PetResponseDTO buscarPorId(Long id) {
         Pet pet = petRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pet não encontrado com id: " + id));
+                .orElseThrow(() -> new ObjectNotFoundException(
+                        PetMessages.PET_NAO_ENCONTRADO));
         return toPetResponseDTO(pet);
     }
 
     public void deletar(Long id) {
+        if (!petRepository.existsById(id)) {
+            throw new ObjectNotFoundException(
+                    PetMessages.PET_NAO_ENCONTRADO);
+        }
         petRepository.deleteById(id);
     }
 
