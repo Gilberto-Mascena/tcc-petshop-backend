@@ -9,26 +9,33 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Getter
 @Setter
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "tb_pet")
+@Table(name = "tb_tutor")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pet {
+public class Tutor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
-    private String especie;
-    private String raca;
-    private LocalDate dataNascimento;
+    private String email;
+
+    @Column(unique = true, nullable = false, length = 11)
+    private String cpf;
+    private String telefone;
+    private String celular;
+
+    @Embedded
+    private Endereco endereco;
 
     @Column(nullable = false, updatable = false)
     @CreatedDate
@@ -37,18 +44,14 @@ public class Pet {
     @LastModifiedDate
     private LocalDateTime dataAtualizacao;
 
-    @Column(columnDefinition = "TEXT")
-    private String observacoes;
-
-    @ManyToOne()
-    @JoinColumn(name = "tutor_id")
-    private Tutor tutor;
+    @OneToMany(mappedBy = "tutor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Pet> pets = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Pet pet = (Pet) o;
-        return Objects.equals(id, pet.id);
+        Tutor tutor = (Tutor) o;
+        return Objects.equals(id, tutor.id);
     }
 
     @Override
