@@ -3,8 +3,8 @@ services:
     image: postgres:15
     container_name: postgres-petshop
     environment:
-      POSTGRES_DB: petshop_db
-      POSTGRES_USER: gilberto
-      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:5432"
