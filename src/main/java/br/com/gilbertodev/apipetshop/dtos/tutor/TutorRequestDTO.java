@@ -1,5 +1,6 @@
-package br.com.gilbertodev.apipetshop.dtos;
+package br.com.gilbertodev.apipetshop.dtos.tutor;
 
+import br.com.gilbertodev.apipetshop.dtos.endereco.EnderecoRequestDTO;
 import br.com.gilbertodev.apipetshop.entities.Endereco;
 import br.com.gilbertodev.apipetshop.entities.Tutor;
 import jakarta.validation.Valid;

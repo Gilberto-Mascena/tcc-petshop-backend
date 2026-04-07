@@ -1,4 +1,4 @@
-package br.com.gilbertodev.apipetshop.dtos;
+package br.com.gilbertodev.apipetshop.dtos.pet;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,5 +1,6 @@
-package br.com.gilbertodev.apipetshop.dtos;
+package br.com.gilbertodev.apipetshop.dtos.tutor;
 
+import br.com.gilbertodev.apipetshop.dtos.endereco.EnderecoResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

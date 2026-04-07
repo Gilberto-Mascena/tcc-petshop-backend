@@ -1,4 +1,4 @@
-package br.com.gilbertodev.apipetshop.dtos;
+package br.com.gilbertodev.apipetshop.dtos.endereco;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

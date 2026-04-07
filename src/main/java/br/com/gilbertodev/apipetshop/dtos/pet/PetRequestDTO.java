@@ -1,4 +1,4 @@
-package br.com.gilbertodev.apipetshop.dtos;
+package br.com.gilbertodev.apipetshop.dtos.pet;
 
 import br.com.gilbertodev.apipetshop.entities.Pet;
 import jakarta.validation.constraints.NotBlank;

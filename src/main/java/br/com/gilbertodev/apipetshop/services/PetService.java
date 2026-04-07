@@ -1,7 +1,7 @@
 package br.com.gilbertodev.apipetshop.services;
 
-import br.com.gilbertodev.apipetshop.dtos.PetRequestDTO;
-import br.com.gilbertodev.apipetshop.dtos.PetResponseDTO;
+import br.com.gilbertodev.apipetshop.dtos.pet.PetRequestDTO;
+import br.com.gilbertodev.apipetshop.dtos.pet.PetResponseDTO;
 import br.com.gilbertodev.apipetshop.entities.Pet;
 import br.com.gilbertodev.apipetshop.exceptions.BusinessException;
 import br.com.gilbertodev.apipetshop.exceptions.ObjectNotFoundException;

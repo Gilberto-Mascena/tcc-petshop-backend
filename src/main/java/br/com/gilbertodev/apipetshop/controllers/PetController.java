@@ -1,7 +1,7 @@
 package br.com.gilbertodev.apipetshop.controllers;
 
-import br.com.gilbertodev.apipetshop.dtos.PetRequestDTO;
-import br.com.gilbertodev.apipetshop.dtos.PetResponseDTO;
+import br.com.gilbertodev.apipetshop.dtos.pet.PetRequestDTO;
+import br.com.gilbertodev.apipetshop.dtos.pet.PetResponseDTO;
 import br.com.gilbertodev.apipetshop.services.PetService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
