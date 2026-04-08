@@ -1,5 +1,6 @@
 package br.com.gilbertodev.apipetshop.entities;
 
+import br.com.gilbertodev.apipetshop.dtos.pet.PetRequestDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -43,6 +44,14 @@ public class Pet {
     @ManyToOne()
     @JoinColumn(name = "tutor_id")
     private Tutor tutor;
+
+    public void atualizarDados(PetRequestDTO dados) {
+        this.nome = dados.getNome();
+        this.especie = dados.getEspecie();
+        this.raca = dados.getRaca();
+        this.dataNascimento = dados.getDataNascimento();
+        this.observacoes = dados.getObservacoes();
+    }
 
     @Override
     public boolean equals(Object o) {

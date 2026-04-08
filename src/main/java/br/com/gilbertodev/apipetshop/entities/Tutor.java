@@ -1,5 +1,6 @@
 package br.com.gilbertodev.apipetshop.entities;
 
+import br.com.gilbertodev.apipetshop.dtos.tutor.TutorRequestDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -46,6 +47,19 @@ public class Tutor {
 
     @OneToMany(mappedBy = "tutor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pet> pets = new ArrayList<>();
+
+    public void atualizarDados(TutorRequestDTO dados) {
+        this.nome = dados.getNome();
+        this.email = dados.getEmail();
+        this.cpf = dados.getCpf();
+        this.telefone = dados.getTelefone();
+        this.celular = dados.getCelular();
+
+        if (dados.getEndereco() != null) {
+            if (this.endereco == null) this.endereco = new Endereco();
+            this.endereco.atualizarDados(dados.getEndereco());
+        }
+    }
 
     @Override
     public boolean equals(Object o) {

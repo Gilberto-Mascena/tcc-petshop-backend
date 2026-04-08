@@ -8,6 +8,7 @@ import br.com.gilbertodev.apipetshop.exceptions.ObjectNotFoundException;
 import br.com.gilbertodev.apipetshop.exceptions.PetMessages;
 import br.com.gilbertodev.apipetshop.repositories.PetRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -22,6 +23,7 @@ public class PetService {
         this.petRepository = petRepository;
     }
 
+    @Transactional
     public PetResponseDTO salvar(PetRequestDTO petRequestDTO) {
         if (petRequestDTO.getDataNascimento().isBefore(LocalDate.now().minusYears(30))) {
             throw new BusinessException(
@@ -32,20 +34,16 @@ public class PetService {
         return toPetResponseDTO(petRepository.save(pet));
     }
 
+    @Transactional
     public PetResponseDTO atualizar(Long id, PetRequestDTO petAtualizado) {
-        return petRepository.findById(id)
-                .map(pet -> {
-                    pet.setNome(petAtualizado.getNome());
-                    pet.setEspecie(petAtualizado.getEspecie());
-                    pet.setRaca(petAtualizado.getRaca());
-                    pet.setDataNascimento(petAtualizado.getDataNascimento());
-                    pet.setObservacoes(petAtualizado.getObservacoes());
-                    return toPetResponseDTO(petRepository.save(pet));
-                })
+        Pet pet = petRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(
                         PetMessages.PET_NAO_ENCONTRADO));
+        pet.atualizarDados(petAtualizado);
+        return toPetResponseDTO(petRepository.save(pet));
     }
 
+    @Transactional(readOnly = true)
     public List<PetResponseDTO> listarTodos() {
         return petRepository.findAll()
                 .stream()
@@ -53,6 +51,7 @@ public class PetService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public PetResponseDTO buscarPorId(Long id) {
         Pet pet = petRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(
@@ -60,6 +59,7 @@ public class PetService {
         return toPetResponseDTO(pet);
     }
 
+    @Transactional
     public void deletar(Long id) {
         if (!petRepository.existsById(id)) {
             throw new ObjectNotFoundException(
