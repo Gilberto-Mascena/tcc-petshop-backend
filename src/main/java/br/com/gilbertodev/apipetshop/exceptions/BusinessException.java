@@ -7,6 +7,12 @@ public class BusinessException extends RuntimeException {
 
     private final String codigo;
 
+    public BusinessException(TutorMessages mensagem) {
+
+        super(mensagem.getMensagem());
+        this.codigo = mensagem.getCodigo();
+    }
+
     public BusinessException(PetMessages mensagem) {
 
         super(mensagem.getMensagem());

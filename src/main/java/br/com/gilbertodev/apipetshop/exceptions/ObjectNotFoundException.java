@@ -7,6 +7,11 @@ public class ObjectNotFoundException extends RuntimeException {
 
     private final String codgio;
 
+    public ObjectNotFoundException(TutorMessages mensagem) {
+        super(mensagem.getMensagem());
+        this.codgio = mensagem.getCodigo();
+    }
+
     public ObjectNotFoundException(PetMessages mensagem) {
         super(mensagem.getMensagem());
         this.codgio = mensagem.getCodigo();

@@ -5,8 +5,10 @@ import br.com.gilbertodev.apipetshop.dtos.tutor.TutorRequestDTO;
 import br.com.gilbertodev.apipetshop.dtos.tutor.TutorResponseDTO;
 import br.com.gilbertodev.apipetshop.entities.Endereco;
 import br.com.gilbertodev.apipetshop.entities.Tutor;
+import br.com.gilbertodev.apipetshop.exceptions.BusinessException;
+import br.com.gilbertodev.apipetshop.exceptions.ObjectNotFoundException;
+import br.com.gilbertodev.apipetshop.exceptions.TutorMessages;
 import br.com.gilbertodev.apipetshop.repositories.TutorRepository;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,10 @@ public class TutorService {
 
     @Transactional
     public TutorResponseDTO salvar(TutorRequestDTO tutorRequestDTO) {
+
+        if (tutorRepository.existsByCpf(tutorRequestDTO.getCpf())) {
+            throw new BusinessException(TutorMessages.CPF_JA_CADASTRADO);
+        }
         Tutor tutor = tutorRequestDTO.toEntity();
         return toTutorResponseDTO(tutorRepository.save(tutor));
     }
@@ -39,13 +45,21 @@ public class TutorService {
     public TutorResponseDTO buscarPorId(Long id) {
         return tutorRepository.findById(id)
                 .map(this::toTutorResponseDTO)
-                .orElseThrow(() -> new RuntimeException("Tutor não encontrado"));
+                .orElseThrow(() -> new ObjectNotFoundException(
+                        TutorMessages.TUTOR_NAO_ENCONTRADO));
     }
 
     @Transactional
     public TutorResponseDTO atualizar(Long id, TutorRequestDTO tutorAtualizado) {
         Tutor tutor = tutorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tutor não encontrado"));
+                .orElseThrow(() -> new ObjectNotFoundException(
+                        TutorMessages.TUTOR_NAO_ENCONTRADO));
+
+        if (!tutorAtualizado.getCpf().equals(tutor.getCpf())) {
+            if (tutorRepository.existsByCpf(tutorAtualizado.getCpf())) {
+                throw new BusinessException(TutorMessages.CPF_JA_CADASTRADO);
+            }
+        }
         tutor.atualizarDados(tutorAtualizado);
         return toTutorResponseDTO(tutorRepository.save(tutor));
     }
@@ -53,7 +67,7 @@ public class TutorService {
     @Transactional
     public void deletar(Long id) {
         if (!tutorRepository.existsById(id)) {
-            throw new RuntimeException("Tutor não encontrado");
+            throw new ObjectNotFoundException(TutorMessages.TUTOR_NAO_ENCONTRADO);
         }
         tutorRepository.deleteById(id);
     }
