@@ -14,10 +14,21 @@ Projeto desenvolvido para o TCC do 5º período de Ciência da Computação. Est
 
 ## 🏗️ Arquitetura e Padrões
 O projeto segue uma arquitetura em camadas, garantindo separação de responsabilidades:
-- **Camada de DTO (Data Transfer Objects)**: Implementada com classes e Lombok para tráfego seguro de dados.
-- **Value Objects (@Embeddable)**: A classe `Endereco` é mapeada como um objeto de valor embutido na entidade `Tutor`.
-- **Tratamento Global de Exceções**: Uso de `@ControllerAdvice` para retornos de erro semânticos (404, 400, 422).
+- **Separação em Camadas**: Controller, Service, Repository e Entity.
+- **Camada de DTO**: Isolamento total entre o modelo de banco de dados e o modelo de resposta da API
+- **Value Objects (@Embeddable)**: Modelagem semântica da classe Endereco dentro da entidade Tutor.
+- **Tratamento Global de Exceções**: Uso de @ControllerAdvice para retornos de erro padronizados (404, 400, 422).
 - **Injeção de Dependências**: Gerenciada pelo Spring IoC.
+- **Regras de Negócio**: Validação rigorosa de unicidade de CPF e consistência de dados relacionais.
+
+## 🚧 Em Construção
+Atualmente, o projeto está na fase de fechamento do módulo de Tutores/Pets. Os próximos passos incluem:
+
+- **[ ] Módulo de Serviços**: Implementação de Banho, Tosa e Consultas.
+
+- **[ ] Agendamento**: Lógica para controle de horários e status de serviços.
+
+- **[ ] Autenticação**: Implementação de segurança com Spring Security e JWT.
 
 ## 📖 Documentação da API (Swagger)
 A API conta com documentação interativa via Swagger/OpenAPI. Com a aplicação rodando, acesse:
@@ -27,7 +38,7 @@ A API conta com documentação interativa via Swagger/OpenAPI. Com a aplicação
 
 ### 1. Clonar o repositório
 ```bash 
-git git clone https://github.com/Gilberto-Mascena/tcc-petshop-backend.git
+git clone https://github.com/Gilberto-Mascena/tcc-petshop-backend.git
 cd petshop-backend
 ```
 
@@ -56,6 +67,18 @@ docker-compose up -d
 ```
 
 ### 🛣️ Endpoints Principais
+
+**Tutores & Endereços**
+
+| **Método** | **Endpoint** | **Descrição** |
+| :---: | :---: | :---: |
+**POST** | `/api/tutores` |	Cadastra Tutor (Valida CPF único e Endereço) |
+**GET** | `/api/tutores`| Lista todos os Tutores cadastrados |
+**GET** | `/api/tutores/{id}`| Busca um Tutor detalhado por ID |
+**PUT** | `/api/tutores/{id}` | Atualiza dados (Valida CPF se alterado) |
+**DELETE**       | `/api/tutores/{id}` | Remove Tutor e seus vínculos |
+
+**Pets**
 
 | **Método** | **Endpoint** | **Descrição** |
 | :---: | :---: | :---: |
