@@ -21,14 +21,16 @@ O projeto segue uma arquitetura em camadas, garantindo separação de responsabi
 - **Injeção de Dependências**: Gerenciada pelo Spring IoC.
 - **Regras de Negócio**: Validação rigorosa de unicidade de CPF e consistência de dados relacionais.
 
-## 🚧 Em Construção
-Atualmente, o projeto está na fase de fechamento do módulo de Tutores/Pets. Os próximos passos incluem:
+## 🚧 Status do Desenvolvimento
+O projeto está em fase ativa de desenvolvimento. Acompanhe o progresso detalhado no nosso [Kanban](https://github.com/users/Gilberto-Mascena/projects/2/views/1).
 
-- **[ ] Módulo de Serviços**: Implementação de Banho, Tosa e Consultas.
+- **[➡️] Módulo de Serviços**: Em fase de implementação (Entidades, DTOs e Repositories concluídos).
+- **[ ] Agendamento**: Lógica para controle de horários.
+- **[ ] Autenticação**: Spring Security + JWT.
 
-- **[ ] Agendamento**: Lógica para controle de horários e status de serviços.
-
-- **[ ] Autenticação**: Implementação de segurança com Spring Security e JWT.
+## 📊 Gestão do Projeto
+Para acompanhar o desenvolvimento das funcionalidades, bugs e melhorias, utilizamos um quadro Kanban público no GitHub Projects:
+👉 **[Quadro de Atividades (Kanban)](https://github.com/users/Gilberto-Mascena/projects/2/views/1)**
 
 ## 📖 Documentação da API (Swagger)
 A API conta com documentação interativa via Swagger/OpenAPI. Com a aplicação rodando, acesse:
