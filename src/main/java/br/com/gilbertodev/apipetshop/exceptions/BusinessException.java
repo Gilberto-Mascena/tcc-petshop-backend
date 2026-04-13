@@ -1,5 +1,6 @@
 package br.com.gilbertodev.apipetshop.exceptions;
 
+import br.com.gilbertodev.apipetshop.interfaces.MessageBase;
 import lombok.Getter;
 
 @Getter
@@ -7,15 +8,9 @@ public class BusinessException extends RuntimeException {
 
     private final String codigo;
 
-    public BusinessException(TutorMessages mensagem) {
+    public BusinessException(MessageBase mensagemBase) {
 
-        super(mensagem.getMensagem());
-        this.codigo = mensagem.getCodigo();
-    }
-
-    public BusinessException(PetMessages mensagem) {
-
-        super(mensagem.getMensagem());
-        this.codigo = mensagem.getCodigo();
+        super(mensagemBase.getMensagem());
+        this.codigo = mensagemBase.getCodigo();
     }
 }
