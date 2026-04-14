@@ -1,4 +1,4 @@
-package br.com.gilbertodev.apipetshop.enums;
+package br.com.gilbertodev.apipetshop.enums.messages;
 
 import br.com.gilbertodev.apipetshop.interfaces.MessageBase;
 import lombok.AllArgsConstructor;

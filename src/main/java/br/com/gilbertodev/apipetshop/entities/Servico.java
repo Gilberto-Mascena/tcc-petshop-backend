@@ -1,6 +1,6 @@
 package br.com.gilbertodev.apipetshop.entities;
 
-import br.com.gilbertodev.apipetshop.enums.ServicoMessages;
+import br.com.gilbertodev.apipetshop.enums.messages.ServicoMessages;
 import br.com.gilbertodev.apipetshop.enums.TipoServico;
 import br.com.gilbertodev.apipetshop.exceptions.BusinessException;
 import jakarta.persistence.*;

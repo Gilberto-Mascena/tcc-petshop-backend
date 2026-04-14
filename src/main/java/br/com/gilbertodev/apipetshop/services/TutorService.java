@@ -7,7 +7,7 @@ import br.com.gilbertodev.apipetshop.entities.Endereco;
 import br.com.gilbertodev.apipetshop.entities.Tutor;
 import br.com.gilbertodev.apipetshop.exceptions.BusinessException;
 import br.com.gilbertodev.apipetshop.exceptions.ObjectNotFoundException;
-import br.com.gilbertodev.apipetshop.exceptions.TutorMessages;
+import br.com.gilbertodev.apipetshop.enums.messages.TutorMessages;
 import br.com.gilbertodev.apipetshop.repositories.TutorRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

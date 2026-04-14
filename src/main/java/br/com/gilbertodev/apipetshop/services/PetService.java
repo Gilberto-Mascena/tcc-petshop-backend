@@ -5,7 +5,7 @@ import br.com.gilbertodev.apipetshop.dtos.pet.PetResponseDTO;
 import br.com.gilbertodev.apipetshop.entities.Pet;
 import br.com.gilbertodev.apipetshop.exceptions.BusinessException;
 import br.com.gilbertodev.apipetshop.exceptions.ObjectNotFoundException;
-import br.com.gilbertodev.apipetshop.exceptions.PetMessages;
+import br.com.gilbertodev.apipetshop.enums.messages.PetMessages;
 import br.com.gilbertodev.apipetshop.repositories.PetRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -16,14 +16,15 @@ public class ResourceExceptionHandler {
 
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
         StandardError err = montarErro(e.getCodigo(), e.getMessage(), status, request);
-        return ResponseEntity.status(status).body(montarErro(e.getCodigo(), e.getMessage(), status, request));
+        return ResponseEntity.status(status).body(err);
     }
 
     @ExceptionHandler(ObjectNotFoundException.class)
     public ResponseEntity<StandardError> objectNotFound(ObjectNotFoundException e, HttpServletRequest request) {
 
         HttpStatus status = HttpStatus.NOT_FOUND;
-        return ResponseEntity.status(status).body(montarErro(e.getCodgio(), e.getMessage(), status, request));
+        StandardError err = montarErro(e.getCodigo(), e.getMessage(), status, request);
+        return ResponseEntity.status(status).body(err);
     }
 
     private StandardError montarErro(String codigo, String mensagem, HttpStatus status, HttpServletRequest request) {
