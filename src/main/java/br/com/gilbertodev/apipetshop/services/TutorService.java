@@ -1,13 +1,14 @@
 package br.com.gilbertodev.apipetshop.services;
 
 import br.com.gilbertodev.apipetshop.dtos.endereco.EnderecoResponseDTO;
+import br.com.gilbertodev.apipetshop.dtos.pet.PetResponseDTO;
 import br.com.gilbertodev.apipetshop.dtos.tutor.TutorRequestDTO;
 import br.com.gilbertodev.apipetshop.dtos.tutor.TutorResponseDTO;
 import br.com.gilbertodev.apipetshop.entities.Endereco;
 import br.com.gilbertodev.apipetshop.entities.Tutor;
+import br.com.gilbertodev.apipetshop.enums.messages.TutorMessages;
 import br.com.gilbertodev.apipetshop.exceptions.BusinessException;
 import br.com.gilbertodev.apipetshop.exceptions.ObjectNotFoundException;
-import br.com.gilbertodev.apipetshop.enums.messages.TutorMessages;
 import br.com.gilbertodev.apipetshop.repositories.TutorRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,12 +74,31 @@ public class TutorService {
     }
 
     private TutorResponseDTO toTutorResponseDTO(Tutor tutor) {
+
+        List<PetResponseDTO> petDTOs = tutor.getPets().stream()
+                .map(pet -> {
+                    Integer idade = null;
+                    if (pet.getDataNascimento() != null) {
+                        idade = java.time.Period.between(pet.getDataNascimento(), java.time.LocalDate.now()).getYears();
+                    }
+                    return new PetResponseDTO(
+                            pet.getId(),
+                            pet.getNome(),
+                            pet.getEspecie(),
+                            pet.getRaca(),
+                            idade,
+                            pet.getObservacoes(),
+                            pet.getDataCriacao()
+                    );
+                }).toList();
+
         return new TutorResponseDTO(
                 tutor.getId(),
                 tutor.getNome(),
                 tutor.getEmail(),
                 tutor.getCelular(),
-                toEnderecoResponseDTO(tutor.getEndereco())
+                toEnderecoResponseDTO(tutor.getEndereco()),
+                petDTOs // <--- O sexto elemento que estava faltando!
         );
     }
 
