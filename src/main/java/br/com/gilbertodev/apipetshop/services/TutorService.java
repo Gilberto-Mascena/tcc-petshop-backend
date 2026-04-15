@@ -98,7 +98,7 @@ public class TutorService {
                 tutor.getEmail(),
                 tutor.getCelular(),
                 toEnderecoResponseDTO(tutor.getEndereco()),
-                petDTOs // <--- O sexto elemento que estava faltando!
+                petDTOs
         );
     }
 
