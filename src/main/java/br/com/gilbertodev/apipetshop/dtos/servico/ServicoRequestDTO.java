@@ -1,5 +1,6 @@
 package br.com.gilbertodev.apipetshop.dtos.servico;
 
+import br.com.gilbertodev.apipetshop.entities.Servico;
 import br.com.gilbertodev.apipetshop.enums.TipoServico;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
@@ -21,4 +22,12 @@ public class ServicoRequestDTO {
 
     @NotNull(message = "O ID do pet é obrigatório")
     private Long petId;
+
+    public Servico toEntity() {
+        Servico entidade = new Servico();
+        entidade.setTipo(this.tipo);
+        entidade.setDataHora(this.dataHora);
+        entidade.setObservacoes(this.observacoes);
+        return entidade;
+    }
 }
