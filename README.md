@@ -27,8 +27,9 @@ Acompanhe a evolução das tarefas e o roadmap detalhado através do **[Quadro K
 
 ### 📋 Roadmap de Funcionalidades
 
-- **[➡️] Módulo de Serviços**: Em implementação (Regras de negócio e cálculos dinâmicos).
-- **[ ] Agendamento**: Controle de horários e disponibilidade.
+- **[✅] Gestão de Tutores e Pets**: Concluído (CRUD e validações base).
+- **[✅] Módulo de Serviços**: Concluído (Cadastro e categorias).
+- **[➡️] Agendamento**: Em implementação (Issue #2 - Controle de status e horários).
 - **[ ] Segurança**: Autenticação e Autorização com Spring Security + JWT.
 - **[ ] Relatórios**: Dashboard de faturamento e atendimentos.
 ## 📖 Documentação da API (Swagger)
