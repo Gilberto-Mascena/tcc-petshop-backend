@@ -3,10 +3,13 @@ package br.com.gilbertodev.apipetshop.services;
 import br.com.gilbertodev.apipetshop.dtos.pet.PetRequestDTO;
 import br.com.gilbertodev.apipetshop.dtos.pet.PetResponseDTO;
 import br.com.gilbertodev.apipetshop.entities.Pet;
+import br.com.gilbertodev.apipetshop.entities.Tutor;
+import br.com.gilbertodev.apipetshop.enums.messages.PetMessages;
+import br.com.gilbertodev.apipetshop.enums.messages.TutorMessages;
 import br.com.gilbertodev.apipetshop.exceptions.BusinessException;
 import br.com.gilbertodev.apipetshop.exceptions.ObjectNotFoundException;
-import br.com.gilbertodev.apipetshop.enums.messages.PetMessages;
 import br.com.gilbertodev.apipetshop.repositories.PetRepository;
+import br.com.gilbertodev.apipetshop.repositories.TutorRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,19 +21,27 @@ import java.util.List;
 public class PetService {
 
     private final PetRepository petRepository;
+    private final TutorRepository tutorRepository;
 
-    public PetService(PetRepository petRepository) {
+    public PetService(PetRepository petRepository, TutorRepository tutorRepository) {
         this.petRepository = petRepository;
+        this.tutorRepository = tutorRepository;
     }
 
     @Transactional
     public PetResponseDTO salvar(PetRequestDTO petRequestDTO) {
+
         if (petRequestDTO.getDataNascimento().isBefore(LocalDate.now().minusYears(30))) {
-            throw new BusinessException(
-                    PetMessages.PET_IDADE_INVALIDA
-            );
+            throw new BusinessException(PetMessages.PET_IDADE_INVALIDA);
         }
+
         Pet pet = petRequestDTO.toEntity();
+
+        Tutor tutor = tutorRepository.findById(petRequestDTO.getTutorId())
+                .orElseThrow(() -> new BusinessException(TutorMessages.TUTOR_NAO_ENCONTRADO));
+
+        pet.setTutor(tutor);
+
         return toPetResponseDTO(petRepository.save(pet));
     }
 
