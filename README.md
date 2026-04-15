@@ -21,17 +21,16 @@ O projeto segue uma arquitetura em camadas, garantindo separação de responsabi
 - **Injeção de Dependências**: Gerenciada pelo Spring IoC.
 - **Regras de Negócio**: Validação rigorosa de unicidade de CPF e consistência de dados relacionais.
 
-## 🚧 Status do Desenvolvimento
-O projeto está em fase ativa de desenvolvimento. Acompanhe o progresso detalhado no nosso [Kanban](https://github.com/users/Gilberto-Mascena/projects/2/views/1).
+## 🚀 Status do Projeto
 
-- **[➡️] Módulo de Serviços**: Em fase de implementação (Entidades, DTOs e Repositories concluídos).
-- **[ ] Agendamento**: Lógica para controle de horários.
-- **[ ] Autenticação**: Spring Security + JWT.
+Acompanhe a evolução das tarefas e o roadmap detalhado através do **[Quadro Kanban (GitHub Projects)](https://github.com/users/Gilberto-Mascena/projects/2/views/1)**.
 
-## 📊 Gestão do Projeto
-Para acompanhar o desenvolvimento das funcionalidades, bugs e melhorias, utilizamos um quadro Kanban público no GitHub Projects:
-👉 **[Quadro de Atividades (Kanban)](https://github.com/users/Gilberto-Mascena/projects/2/views/1)**
+### 📋 Roadmap de Funcionalidades
 
+- **[➡️] Módulo de Serviços**: Em implementação (Regras de negócio e cálculos dinâmicos).
+- **[ ] Agendamento**: Controle de horários e disponibilidade.
+- **[ ] Segurança**: Autenticação e Autorização com Spring Security + JWT.
+- **[ ] Relatórios**: Dashboard de faturamento e atendimentos.
 ## 📖 Documentação da API (Swagger)
 A API conta com documentação interativa via Swagger/OpenAPI. Com a aplicação rodando, acesse:
 👉 [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
