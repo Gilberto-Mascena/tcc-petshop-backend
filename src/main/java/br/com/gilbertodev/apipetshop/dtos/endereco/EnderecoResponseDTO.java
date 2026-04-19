@@ -18,7 +18,6 @@ public class EnderecoResponseDTO {
     private String uf;
     private String cep;
 
-    // ESTE É O CONSTRUTOR QUE ESTÁ FALTANDO!
     public EnderecoResponseDTO(Endereco endereco) {
         if (endereco != null) {
             this.logradouro = endereco.getLogradouro();

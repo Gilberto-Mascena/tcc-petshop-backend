@@ -60,4 +60,9 @@ public class ServicoService {
         }
         servicoRepository.deleteById(id);
     }
+
+    public Servico buscarEntidadePorId(Long id) {
+        return servicoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Serviço não encontrado com id: " + id));
+    }
 }

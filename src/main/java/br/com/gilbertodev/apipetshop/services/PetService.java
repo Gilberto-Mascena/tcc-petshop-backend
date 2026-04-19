@@ -62,10 +62,8 @@ public class PetService {
         Pet pet = petRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(PetMessages.PET_NAO_ENCONTRADO));
 
-        // Atualiza os dados da entidade com o que veio do DTO
         pet.atualizarDados(dto);
 
-        // Se o Tutor mudar no pet, precisamos buscar o novo tutor
         if (dto.getTutorId() != null && !dto.getTutorId().equals(pet.getTutor().getId())) {
             Tutor novoTutor = tutorRepository.findById(dto.getTutorId())
                     .orElseThrow(() -> new BusinessException(TutorMessages.TUTOR_NAO_ENCONTRADO));
@@ -81,5 +79,10 @@ public class PetService {
             throw new ObjectNotFoundException(PetMessages.PET_NAO_ENCONTRADO);
         }
         petRepository.deleteById(id);
+    }
+
+    public Pet buscarEntidadePorId(Long id) {
+        return petRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pet não encontrado com id: " + id));
     }
 }
