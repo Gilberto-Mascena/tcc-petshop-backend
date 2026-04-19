@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Table(name = "tb_agendamento")
@@ -16,11 +15,7 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Agendamento {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Agendamento extends EntidadeBase {
 
     @Column(nullable = false)
     private LocalDateTime dataHora;
@@ -29,37 +24,15 @@ public class Agendamento {
     @Column(nullable = false)
     private StatusAgendamento status = StatusAgendamento.PENDENTE;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pet_id", nullable = false)
     private Pet pet;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "servico_id", nullable = false)
     private Servico servico;
+
     private String observacoes;
-
-    private LocalDateTime dataCriacao;
-
-    @PrePersist
-    protected void onCreate() {
-        this.dataCriacao = LocalDateTime.now();
-
-        if (this.status == null) {
-            this.status = StatusAgendamento.PENDENTE;
-        }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Agendamento that = (Agendamento) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
 
     public void cancelar() {
         this.status = StatusAgendamento.CANCELADO;
