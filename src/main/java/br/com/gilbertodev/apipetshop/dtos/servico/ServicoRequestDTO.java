@@ -2,32 +2,31 @@ package br.com.gilbertodev.apipetshop.dtos.servico;
 
 import br.com.gilbertodev.apipetshop.entities.Servico;
 import br.com.gilbertodev.apipetshop.enums.TipoServico;
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 @Data
+@NoArgsConstructor
 public class ServicoRequestDTO {
 
     @NotNull(message = "O tipo de serviço é obrigatório")
     private TipoServico tipo;
 
-    @NotNull(message = "A data e hora são obrigatórias")
-    @Future(message = "A data do serviço deve ser no futuro")
-    private LocalDateTime dataHora;
-
     private String observacoes;
 
-    @NotNull(message = "O ID do pet é obrigatório")
-    private Long petId;
+    @NotNull(message = "O valor base é obrigatório")
+    @Positive(message = "O valor deve ser maior que zero")
+    private BigDecimal valorBase;
 
     public Servico toEntity() {
-        Servico entidade = new Servico();
-        entidade.setTipo(this.tipo);
-        entidade.setDataHora(this.dataHora);
-        entidade.setObservacoes(this.observacoes);
-        return entidade;
+        Servico servico = new Servico();
+        servico.setTipo(this.tipo);
+        servico.setObservacoes(this.observacoes);
+        servico.setValorBase(this.valorBase);
+        return servico;
     }
 }

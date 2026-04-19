@@ -1,29 +1,27 @@
 package br.com.gilbertodev.apipetshop.dtos.servico;
 
 import br.com.gilbertodev.apipetshop.entities.Servico;
-import lombok.AllArgsConstructor;
+import br.com.gilbertodev.apipetshop.enums.TipoServico;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor(force = true)
-@AllArgsConstructor
+@Setter
+@NoArgsConstructor
 public class ServicoResponseDTO {
 
-    private final Long id;
-    private final String tipoDescricao;
-    private final BigDecimal valor;
-    private final LocalDateTime dataHora;
-    private final String nomePet;
+    private Long id;
+    private TipoServico tipo;
+    private String observacoes;
+    private BigDecimal valorBase;
 
-    public ServicoResponseDTO(Servico entidade) {
-        this.id = entidade.getId();
-        this.tipoDescricao = (entidade.getTipo() != null) ? entidade.getTipo().getDescricao() : null;
-        this.valor = entidade.getValor();
-        this.dataHora = entidade.getDataHora();
-        this.nomePet = (entidade.getPet() != null) ? entidade.getPet().getNome() : "Não informado";
+    public ServicoResponseDTO(Servico servico) {
+        this.id = servico.getId();
+        this.tipo = servico.getTipo();
+        this.observacoes = servico.getObservacoes();
+        this.valorBase = servico.getValorBase();
     }
 }

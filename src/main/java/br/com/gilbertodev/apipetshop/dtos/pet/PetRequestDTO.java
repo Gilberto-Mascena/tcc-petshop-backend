@@ -32,7 +32,7 @@ public class PetRequestDTO {
     private LocalDate dataNascimento;
     private String observacoes;
 
-    @NotNull(message = "O ID do tutor é obrigatório") // O "segurança" da relação
+    @NotNull(message = "O ID do tutor é obrigatório")
     private Long tutorId;
 
     @NotNull(message = "O porte do pet é obrigatório")

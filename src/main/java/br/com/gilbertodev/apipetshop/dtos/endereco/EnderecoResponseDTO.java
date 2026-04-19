@@ -1,19 +1,33 @@
 package br.com.gilbertodev.apipetshop.dtos.endereco;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import br.com.gilbertodev.apipetshop.entities.Endereco;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
-@NoArgsConstructor(force = true)
-@AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 public class EnderecoResponseDTO {
 
-    private final String uf;
-    private final String cidade;
-    private final String bairro;
-    private final String logradouro;
-    private final String numero;
-    private final String complemento;
-    private final String cep;
+    private String logradouro;
+    private String numero;
+    private String complemento;
+    private String bairro;
+    private String cidade;
+    private String uf;
+    private String cep;
+
+    // ESTE É O CONSTRUTOR QUE ESTÁ FALTANDO!
+    public EnderecoResponseDTO(Endereco endereco) {
+        if (endereco != null) {
+            this.logradouro = endereco.getLogradouro();
+            this.numero = endereco.getNumero();
+            this.complemento = endereco.getComplemento();
+            this.bairro = endereco.getBairro();
+            this.cidade = endereco.getCidade();
+            this.uf = endereco.getUf();
+            this.cep = endereco.getCep();
+        }
+    }
 }

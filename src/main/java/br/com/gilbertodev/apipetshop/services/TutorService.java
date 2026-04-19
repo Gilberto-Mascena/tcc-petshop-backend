@@ -1,10 +1,7 @@
 package br.com.gilbertodev.apipetshop.services;
 
-import br.com.gilbertodev.apipetshop.dtos.endereco.EnderecoResponseDTO;
-import br.com.gilbertodev.apipetshop.dtos.pet.PetResponseDTO;
 import br.com.gilbertodev.apipetshop.dtos.tutor.TutorRequestDTO;
 import br.com.gilbertodev.apipetshop.dtos.tutor.TutorResponseDTO;
-import br.com.gilbertodev.apipetshop.entities.Endereco;
 import br.com.gilbertodev.apipetshop.entities.Tutor;
 import br.com.gilbertodev.apipetshop.enums.messages.TutorMessages;
 import br.com.gilbertodev.apipetshop.exceptions.BusinessException;
@@ -74,44 +71,6 @@ public class TutorService {
     }
 
     private TutorResponseDTO toTutorResponseDTO(Tutor tutor) {
-
-        List<PetResponseDTO> petDTOs = tutor.getPets().stream()
-                .map(pet -> {
-                    Integer idade = null;
-                    if (pet.getDataNascimento() != null) {
-                        idade = java.time.Period.between(pet.getDataNascimento(), java.time.LocalDate.now()).getYears();
-                    }
-                    return new PetResponseDTO(
-                            pet.getId(),
-                            pet.getNome(),
-                            pet.getEspecie(),
-                            pet.getRaca(),
-                            idade,
-                            pet.getObservacoes(),
-                            pet.getDataCriacao()
-                    );
-                }).toList();
-
-        return new TutorResponseDTO(
-                tutor.getId(),
-                tutor.getNome(),
-                tutor.getEmail(),
-                tutor.getCelular(),
-                toEnderecoResponseDTO(tutor.getEndereco()),
-                petDTOs
-        );
-    }
-
-    private EnderecoResponseDTO toEnderecoResponseDTO(Endereco endereco) {
-        if (endereco == null) return null;
-        return new EnderecoResponseDTO(
-                endereco.getUf(),
-                endereco.getCidade(),
-                endereco.getBairro(),
-                endereco.getLogradouro(),
-                endereco.getNumero(),
-                endereco.getComplemento(),
-                endereco.getCep()
-        );
+        return new TutorResponseDTO(tutor);
     }
 }

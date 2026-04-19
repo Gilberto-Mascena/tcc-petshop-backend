@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 
 @Service
@@ -30,7 +29,6 @@ public class PetService {
 
     @Transactional
     public PetResponseDTO salvar(PetRequestDTO petRequestDTO) {
-
         if (petRequestDTO.getDataNascimento().isBefore(LocalDate.now().minusYears(30))) {
             throw new BusinessException(PetMessages.PET_IDADE_INVALIDA);
         }
@@ -41,57 +39,47 @@ public class PetService {
                 .orElseThrow(() -> new BusinessException(TutorMessages.TUTOR_NAO_ENCONTRADO));
 
         pet.setTutor(tutor);
-
-        return toPetResponseDTO(petRepository.save(pet));
-    }
-
-    @Transactional
-    public PetResponseDTO atualizar(Long id, PetRequestDTO petAtualizado) {
-        Pet pet = petRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(
-                        PetMessages.PET_NAO_ENCONTRADO));
-        pet.atualizarDados(petAtualizado);
-        return toPetResponseDTO(petRepository.save(pet));
+        return new PetResponseDTO(petRepository.save(pet));
     }
 
     @Transactional(readOnly = true)
     public List<PetResponseDTO> listarTodos() {
         return petRepository.findAll()
                 .stream()
-                .map(this::toPetResponseDTO)
+                .map(PetResponseDTO::new)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public PetResponseDTO buscarPorId(Long id) {
+        return petRepository.findById(id)
+                .map(PetResponseDTO::new)
+                .orElseThrow(() -> new ObjectNotFoundException(PetMessages.PET_NAO_ENCONTRADO));
+    }
+
+    @Transactional
+    public PetResponseDTO atualizar(Long id, PetRequestDTO dto) {
         Pet pet = petRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(
-                        PetMessages.PET_NAO_ENCONTRADO));
-        return toPetResponseDTO(pet);
+                .orElseThrow(() -> new ObjectNotFoundException(PetMessages.PET_NAO_ENCONTRADO));
+
+        // Atualiza os dados da entidade com o que veio do DTO
+        pet.atualizarDados(dto);
+
+        // Se o Tutor mudar no pet, precisamos buscar o novo tutor
+        if (dto.getTutorId() != null && !dto.getTutorId().equals(pet.getTutor().getId())) {
+            Tutor novoTutor = tutorRepository.findById(dto.getTutorId())
+                    .orElseThrow(() -> new BusinessException(TutorMessages.TUTOR_NAO_ENCONTRADO));
+            pet.setTutor(novoTutor);
+        }
+
+        return new PetResponseDTO(petRepository.save(pet));
     }
 
     @Transactional
     public void deletar(Long id) {
         if (!petRepository.existsById(id)) {
-            throw new ObjectNotFoundException(
-                    PetMessages.PET_NAO_ENCONTRADO);
+            throw new ObjectNotFoundException(PetMessages.PET_NAO_ENCONTRADO);
         }
         petRepository.deleteById(id);
-    }
-
-    private PetResponseDTO toPetResponseDTO(Pet pet) {
-        Integer idadeCalculada = null;
-        if (pet.getDataNascimento() != null) {
-            idadeCalculada = Period.between(pet.getDataNascimento(), LocalDate.now()).getYears();
-        }
-        return new PetResponseDTO(
-                pet.getId(),
-                pet.getNome(),
-                pet.getEspecie(),
-                pet.getRaca(),
-                idadeCalculada,
-                pet.getObservacoes(),
-                pet.getDataCriacao()
-        );
     }
 }
