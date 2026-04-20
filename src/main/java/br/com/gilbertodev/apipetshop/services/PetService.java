@@ -83,6 +83,6 @@ public class PetService {
 
     public Pet buscarEntidadePorId(Long id) {
         return petRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pet não encontrado com id: " + id));
+                .orElseThrow(() -> new ObjectNotFoundException(PetMessages.PET_NAO_ENCONTRADO));
     }
 }
