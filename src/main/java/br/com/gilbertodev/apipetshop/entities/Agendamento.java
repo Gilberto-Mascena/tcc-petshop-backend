@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -24,30 +25,16 @@ public class Agendamento extends EntidadeBase {
     @Column(nullable = false)
     private StatusAgendamento status = StatusAgendamento.PENDENTE;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "pet_id", nullable = false)
     private Pet pet;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "servico_id", nullable = false)
     private Servico servico;
 
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal valorTotal;
+
     private String observacoes;
-
-    public void cancelar() {
-        this.status = StatusAgendamento.CANCELADO;
-    }
-
-    public void confirmar() {
-        this.status = StatusAgendamento.CONFIRMADO;
-    }
-
-    public void concluir() {
-        this.status = StatusAgendamento.REALIZADO;
-    }
-
-    public void reagendar(LocalDateTime novaData) {
-        this.dataHora = novaData;
-        this.status = StatusAgendamento.PENDENTE;
-    }
 }

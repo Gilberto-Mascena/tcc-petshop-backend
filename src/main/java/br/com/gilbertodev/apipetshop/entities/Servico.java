@@ -26,8 +26,4 @@ public class Servico extends EntidadeBase {
 
     @Column(nullable = false)
     private BigDecimal valorBase;
-
-    public BigDecimal getValorComMultiplicador(BigDecimal multiplicador) {
-        return this.valorBase.multiply(multiplicador);
-    }
 }

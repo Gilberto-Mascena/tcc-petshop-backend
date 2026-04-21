@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -19,6 +20,7 @@ public class AgendamentoResponseDTO {
     private String nomePet;
     private String tipoServico;
     private String observacoes;
+    private BigDecimal valorTotal;
 
     public AgendamentoResponseDTO(Agendamento agendamento) {
         this.id = agendamento.getId();
@@ -33,6 +35,11 @@ public class AgendamentoResponseDTO {
             this.tipoServico = agendamento.getServico().getTipo().name();
         }
 
+        if (agendamento.getServico() != null) {
+            this.tipoServico = agendamento.getServico().getTipo().getDescricao();
+        }
+
         this.observacoes = agendamento.getObservacoes();
+        this.valorTotal = agendamento.getValorTotal();
     }
 }

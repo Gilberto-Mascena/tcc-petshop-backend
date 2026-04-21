@@ -5,6 +5,7 @@ import br.com.gilbertodev.apipetshop.dtos.agendamento.AgendamentoResponseDTO;
 import br.com.gilbertodev.apipetshop.entities.Agendamento;
 import br.com.gilbertodev.apipetshop.entities.Pet;
 import br.com.gilbertodev.apipetshop.entities.Servico;
+import br.com.gilbertodev.apipetshop.enums.PortePet;
 import br.com.gilbertodev.apipetshop.enums.StatusAgendamento;
 import br.com.gilbertodev.apipetshop.enums.messages.AgendamentoMessages;
 import br.com.gilbertodev.apipetshop.exceptions.ObjectNotFoundException;
@@ -12,6 +13,8 @@ import br.com.gilbertodev.apipetshop.repositories.AgendamentoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,8 +43,10 @@ public class AgendamentoService {
         agendamento.setObservacoes(dto.getObservacoes());
         agendamento.setStatus(StatusAgendamento.PENDENTE);
 
-        agendamento = agendamentoRepository.save(agendamento);
+        BigDecimal valorCalculado = calcularValorComAcrescimo(servico.getValorBase(), pet.getPorte());
+        agendamento.setValorTotal(valorCalculado);
 
+        agendamento = agendamentoRepository.save(agendamento);
         return new AgendamentoResponseDTO(agendamento);
     }
 
@@ -64,5 +69,14 @@ public class AgendamentoService {
 
         agendamento.setStatus(novoStatus);
         return new AgendamentoResponseDTO(agendamento);
+    }
+
+    private BigDecimal calcularValorComAcrescimo(BigDecimal valorBase, PortePet porte) {
+        BigDecimal multiplicador = switch (porte) {
+            case MEDIO -> new BigDecimal("1.20");
+            case GRANDE -> new BigDecimal("1.50");
+            default -> BigDecimal.ONE;
+        };
+        return valorBase.multiply(multiplicador).setScale(2, RoundingMode.HALF_UP);
     }
 }
