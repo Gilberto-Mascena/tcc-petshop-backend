@@ -5,33 +5,33 @@ Projeto desenvolvido para o TCC do 5º período de Ciência da Computação. Est
 ## 🚀 Tecnologias Utilizadas
 * **Java 21** (LTS)
 * **Spring Boot 3.4.3**
+* **Spring Security & JWT** (Autenticação Stateless)
 * **Spring Data JPA** (Persistência)
-* **PostgreSQL** (Banco de dados relacional)
-* **Lombok** (Produtividade e código limpo)
+* **PostgreSQL** (Banco de dados relacional via Docker)
+* **Lombok & Java Records** (Produtividade e imutabilidade)
 * **Jakarta Validation** (Validação de dados)
-* **Docker & Docker Compose** (Containerização do banco)
-* **Dotenv Java** (Gestão de variáveis de ambiente)
 
 ## 🏗️ Arquitetura e Padrões
 O projeto segue uma arquitetura em camadas, garantindo separação de responsabilidades:
 - **Separação em Camadas**: Controller, Service, Repository e Entity.
-- **Camada de DTO**: Isolamento total entre o modelo de banco de dados e o modelo de resposta da API
+- **Data Transfer Objects (Records)**: Isolamento entre o modelo de banco de dados e a resposta da API. Uso de Records para garantir imutabilidade e evitar recursividade JSON (Issue #4).
 - **Value Objects (@Embeddable)**: Modelagem semântica da classe Endereco dentro da entidade Tutor.
-- **Tratamento Global de Exceções**: Uso de @ControllerAdvice para retornos de erro padronizados (404, 400, 422).
-- **Injeção de Dependências**: Gerenciada pelo Spring IoC.
-- **Regras de Negócio**: Validação rigorosa de unicidade de CPF e consistência de dados relacionais.
+- **Tratamento Global de Exceções**: Uso de `@ControllerAdvice` para retornos padronizados.
+- **Segurança Stateless**: Proteção de endpoints via tokens JWT.
 
 ## 🚀 Status do Projeto
 
-Acompanhe a evolução das tarefas e o roadmap detalhado através do **[Quadro Kanban (GitHub Projects)](https://github.com/users/Gilberto-Mascena/projects/2/views/1)**.
+Acompanhe a evolução detalhada através do **[Quadro Kanban (GitHub Projects)](https://github.com/users/Gilberto-Mascena/projects/2/views/1)**.
 
 ### 📋 Roadmap de Funcionalidades
 
 - **[✅] Gestão de Tutores e Pets**: Concluído (CRUD e validações base).
-- **[✅] Módulo de Serviços**: Concluído (Cadastro e categorias).
-- **[➡️] Agendamento**: Em implementação (Issue #2 - Controle de status e horários).
-- **[ ] Segurança**: Autenticação e Autorização com Spring Security + JWT.
-- **[ ] Relatórios**: Dashboard de faturamento e atendimentos.
+- **[✅] Segurança**: Implementada (JWT + Spring Security).
+- **[➡️] Refatoração (Issue #4)**: Conversão de Classes para Records e ajuste de recursividade (Em progresso).
+- **[ ] Tratamento de Erros (Issue #5)**: Mensagens amigáveis para violação de integridade (Ex: CPF duplicado).
+- **[ ] Testes (Issue #6)**: Implementação de testes de integração com MockMvc.
+- **[ ] Agendamento**: Controle de status e horários de serviços.
+
 ## 📖 Documentação da API (Swagger)
 A API conta com documentação interativa via Swagger/OpenAPI. Com a aplicação rodando, acesse:
 👉 [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
@@ -72,23 +72,25 @@ docker-compose up -d
 
 **Tutores & Endereços**
 
-| **Método** | **Endpoint** | **Descrição** |
-| :---: | :---: | :---: |
-**POST** | `/api/tutores` |	Cadastra Tutor (Valida CPF único e Endereço) |
-**GET** | `/api/tutores`| Lista todos os Tutores cadastrados |
-**GET** | `/api/tutores/{id}`| Busca um Tutor detalhado por ID |
-**PUT** | `/api/tutores/{id}` | Atualiza dados (Valida CPF se alterado) |
-**DELETE**       | `/api/tutores/{id}` | Remove Tutor e seus vínculos |
+| **Método** |    **Endpoint**     |                 **Descrição**                 |
+|:----------:|:-------------------:|:---------------------------------------------:|
+|  **POST**  |   `/api/tutores`    | 	Cadastra Tutor (Valida CPF único e Endereço) |
+|  **GET**   |   `/api/tutores`    |      Lista todos os Tutores cadastrados       |
+|  **GET**   | `/api/tutores/{id}` |        Busca um Tutor detalhado por ID        |
+|  **PUT**   | `/api/tutores/{id}` |    Atualiza dados (Valida CPF se alterado)    |
+| **DELETE** | `/api/tutores/{id}` |         Remove Tutor e seus vínculos          |
 
 **Pets**
 
-| **Método** | **Endpoint** | **Descrição** |
-| :---: | :---: | :---: |
-| **POST** | `/api/pets` | Cadastra um novo Pet |
-| **GET** | `/api/pets` | Lista todos os Pets |
-| **GET** | `/api/pets/{id}` | Busca um Pet por ID |
-| **PUT** | `/api/pets/{id}` | Atualiza um Pet por ID |
-| **DELETE** | `/api/pets/{id}` | Deleta um Pet por ID |
+| **Método** |   **Endpoint**   |     **Descrição**      |
+|:----------:|:----------------:|:----------------------:|
+|  **POST**  |   `/api/pets`    |  Cadastra um novo Pet  |
+|  **GET**   |   `/api/pets`    |  Lista todos os Pets   |
+|  **GET**   | `/api/pets/{id}` |  Busca um Pet por ID   |
+|  **PUT**   | `/api/pets/{id}` | Atualiza um Pet por ID |
+| **DELETE** | `/api/pets/{id}` |  Deleta um Pet por ID  |
 
 ### 📄 Licença
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE.md) para detalhes.
+
+### Gilberto | Dev _2026_
