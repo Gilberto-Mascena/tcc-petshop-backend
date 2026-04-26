@@ -1,14 +1,11 @@
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET} # Se falhar, usa 12345678 para não dar erro de null
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:${DB_PORT}/${DB_NAME}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
-  jpa:
-    open-in-view: false
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true

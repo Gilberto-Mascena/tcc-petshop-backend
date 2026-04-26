@@ -27,6 +27,14 @@ public class ResourceExceptionHandler {
         return ResponseEntity.status(status).body(err);
     }
 
+    @ExceptionHandler(AuthException.class)
+    public ResponseEntity<StandardError> auth(AuthException e, HttpServletRequest request) {
+
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        StandardError err = montarErro(e.getCodigo(), e.getMessage(), status, request);
+        return ResponseEntity.status(status).body(err);
+    }
+
     private StandardError montarErro(String codigo, String mensagem, HttpStatus status, HttpServletRequest request) {
         return new StandardError(
                 Instant.now(),

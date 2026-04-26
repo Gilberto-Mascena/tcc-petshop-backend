@@ -8,3 +8,5 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "${DB_PORT}:5432"
+    volumes:
+      - "/Volumes/storange mac/tcc-petshop-backend/postgres_data:/var/lib/postgresql/data"
