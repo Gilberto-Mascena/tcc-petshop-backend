@@ -39,14 +39,14 @@ public class Tutor extends EntidadeBase {
     private List<Pet> pets = new ArrayList<>();
 
     public void atualizarDados(TutorRequestDTO dados) {
-        if (dados.getNome() != null) this.nome = dados.getNome();
-        if (dados.getEmail() != null) this.email = dados.getEmail();
-        if (dados.getTelefone() != null) this.telefone = dados.getTelefone();
-        if (dados.getCelular() != null) this.celular = dados.getCelular();
+        if (dados.nome() != null) this.nome = dados.nome();
+        if (dados.email() != null) this.email = dados.email();
+        if (dados.telefone() != null) this.telefone = dados.telefone();
+        if (dados.celular() != null) this.celular = dados.celular();
 
-        if (dados.getEndereco() != null) {
+        if (dados.endereco() != null) {
             if (this.endereco == null) this.endereco = new Endereco();
-            this.endereco.atualizarDados(dados.getEndereco());
+            this.endereco.atualizarDados(dados.endereco());
         }
     }
 }

@@ -27,12 +27,12 @@ public class Endereco {
     private String cep;
 
     public void atualizarDados(@Valid @NotNull(message = "O endereço do tutor é obrigatório") EnderecoRequestDTO endereco) {
-        this.uf = endereco.getUf();
-        this.cidade = endereco.getCidade();
-        this.bairro = endereco.getBairro();
-        this.logradouro = endereco.getLogradouro();
-        this.numero = endereco.getNumero();
-        this.complemento = endereco.getComplemento();
-        this.cep = endereco.getCep();
+        this.uf = endereco.uf();
+        this.cidade = endereco.cidade();
+        this.bairro = endereco.bairro();
+        this.logradouro = endereco.logradouro();
+        this.numero = endereco.numero();
+        this.complemento = endereco.complemento();
+        this.cep = endereco.cep();
     }
 }
