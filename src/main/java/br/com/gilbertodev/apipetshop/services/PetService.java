@@ -8,6 +8,7 @@ import br.com.gilbertodev.apipetshop.enums.messages.PetMessages;
 import br.com.gilbertodev.apipetshop.enums.messages.TutorMessages;
 import br.com.gilbertodev.apipetshop.exceptions.BusinessException;
 import br.com.gilbertodev.apipetshop.exceptions.ObjectNotFoundException;
+import br.com.gilbertodev.apipetshop.mapper.PetMapper;
 import br.com.gilbertodev.apipetshop.repositories.PetRepository;
 import br.com.gilbertodev.apipetshop.repositories.TutorRepository;
 import org.springframework.stereotype.Service;
@@ -21,39 +22,42 @@ public class PetService {
 
     private final PetRepository petRepository;
     private final TutorRepository tutorRepository;
+    private final PetMapper petMapper;
 
-    public PetService(PetRepository petRepository, TutorRepository tutorRepository) {
+    public PetService(PetRepository petRepository, TutorRepository tutorRepository, PetMapper petMapper) {
         this.petRepository = petRepository;
         this.tutorRepository = tutorRepository;
+        this.petMapper = petMapper;
     }
 
     @Transactional
     public PetResponseDTO salvar(PetRequestDTO petRequestDTO) {
-        if (petRequestDTO.getDataNascimento().isBefore(LocalDate.now().minusYears(30))) {
+
+        if (petRequestDTO.dataNascimento() != null &&
+                petRequestDTO.dataNascimento().isBefore(LocalDate.now().minusYears(30))) {
             throw new BusinessException(PetMessages.PET_IDADE_INVALIDA);
         }
 
-        Pet pet = petRequestDTO.toEntity();
-
-        Tutor tutor = tutorRepository.findById(petRequestDTO.getTutorId())
+        Tutor tutor = tutorRepository.findById(petRequestDTO.tutorId())
                 .orElseThrow(() -> new BusinessException(TutorMessages.TUTOR_NAO_ENCONTRADO));
 
-        pet.setTutor(tutor);
-        return new PetResponseDTO(petRepository.save(pet));
+        Pet pet = petMapper.toEntity(petRequestDTO, tutor);
+
+        return petMapper.toResponseDTO(petRepository.save(pet));
     }
 
     @Transactional(readOnly = true)
     public List<PetResponseDTO> listarTodos() {
         return petRepository.findAll()
                 .stream()
-                .map(PetResponseDTO::new)
+                .map(petMapper::toResponseDTO)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public PetResponseDTO buscarPorId(Long id) {
         return petRepository.findById(id)
-                .map(PetResponseDTO::new)
+                .map(petMapper::toResponseDTO)
                 .orElseThrow(() -> new ObjectNotFoundException(PetMessages.PET_NAO_ENCONTRADO));
     }
 
@@ -62,15 +66,15 @@ public class PetService {
         Pet pet = petRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(PetMessages.PET_NAO_ENCONTRADO));
 
-        pet.atualizarDados(dto);
+        petMapper.updateEntityFromDTO(dto, pet);
 
-        if (dto.getTutorId() != null && !dto.getTutorId().equals(pet.getTutor().getId())) {
-            Tutor novoTutor = tutorRepository.findById(dto.getTutorId())
+        if (dto.tutorId() != null && !dto.tutorId().equals(pet.getTutor().getId())) {
+            Tutor novoTutor = tutorRepository.findById(dto.tutorId())
                     .orElseThrow(() -> new BusinessException(TutorMessages.TUTOR_NAO_ENCONTRADO));
             pet.setTutor(novoTutor);
         }
 
-        return new PetResponseDTO(petRepository.save(pet));
+        return petMapper.toResponseDTO(petRepository.save(pet));
     }
 
     @Transactional

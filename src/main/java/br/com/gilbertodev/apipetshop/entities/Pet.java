@@ -1,6 +1,5 @@
 package br.com.gilbertodev.apipetshop.entities;
 
-import br.com.gilbertodev.apipetshop.dtos.pet.PetRequestDTO;
 import br.com.gilbertodev.apipetshop.enums.PortePet;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 @Entity
 @Getter
@@ -39,12 +39,10 @@ public class Pet extends EntidadeBase {
     @Column(nullable = false)
     private PortePet porte;
 
-    public void atualizarDados(PetRequestDTO dados) {
-        if (dados.getNome() != null) this.nome = dados.getNome();
-        if (dados.getEspecie() != null) this.especie = dados.getEspecie();
-        if (dados.getRaca() != null) this.raca = dados.getRaca();
-        if (dados.getDataNascimento() != null) this.dataNascimento = dados.getDataNascimento();
-        if (dados.getObservacoes() != null) this.observacoes = dados.getObservacoes();
-        if (dados.getPorte() != null) this.porte = dados.getPorte();
+    public Integer getIdade() {
+        if (this.dataNascimento == null) {
+            return null;
+        }
+        return Period.between(this.dataNascimento, LocalDate.now()).getYears();
     }
 }
