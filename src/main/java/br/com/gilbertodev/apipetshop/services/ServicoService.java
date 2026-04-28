@@ -5,6 +5,7 @@ import br.com.gilbertodev.apipetshop.dtos.servico.ServicoResponseDTO;
 import br.com.gilbertodev.apipetshop.entities.Servico;
 import br.com.gilbertodev.apipetshop.enums.messages.ServicoMessages;
 import br.com.gilbertodev.apipetshop.exceptions.ObjectNotFoundException;
+import br.com.gilbertodev.apipetshop.mapper.ServicoMapper;
 import br.com.gilbertodev.apipetshop.repositories.ServicoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,42 +16,41 @@ import java.util.List;
 public class ServicoService {
 
     private final ServicoRepository servicoRepository;
+    private final ServicoMapper servicoMapper;
 
-    public ServicoService(ServicoRepository servicoRepository) {
+    public ServicoService(ServicoRepository servicoRepository, ServicoMapper servicoMapper) {
         this.servicoRepository = servicoRepository;
+        this.servicoMapper = servicoMapper;
     }
 
     @Transactional
-    public ServicoResponseDTO salvar(ServicoRequestDTO dto) {
-        Servico entidade = dto.toEntity();
-        return new ServicoResponseDTO(servicoRepository.save(entidade));
+    public ServicoResponseDTO salvar(ServicoRequestDTO servicoRequestDTO) {
+        Servico servico = servicoMapper.toEntity(servicoRequestDTO);
+        Servico servicoSalvo = servicoRepository.save(servico);
+        return servicoMapper.toResponseDTO(servicoSalvo);
     }
 
     @Transactional(readOnly = true)
     public List<ServicoResponseDTO> listarTodos() {
         return servicoRepository.findAll()
                 .stream()
-                .map(ServicoResponseDTO::new)
+                .map(servicoMapper::toResponseDTO)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public ServicoResponseDTO buscarPorId(Long id) {
         return servicoRepository.findById(id)
-                .map(ServicoResponseDTO::new)
+                .map(servicoMapper::toResponseDTO)
                 .orElseThrow(() -> new ObjectNotFoundException(ServicoMessages.SERVICO_NAO_ENCONTRADO));
     }
 
     @Transactional
-    public ServicoResponseDTO atualizar(Long id, ServicoRequestDTO dto) {
-        Servico entidade = servicoRepository.findById(id)
+    public ServicoResponseDTO atualizar(Long id, ServicoRequestDTO servicoAtualizado) {
+        Servico servico = servicoRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(ServicoMessages.SERVICO_NAO_ENCONTRADO));
-
-        entidade.setTipo(dto.getTipo());
-        entidade.setValorBase(dto.getValorBase());
-        entidade.setObservacoes(dto.getObservacoes());
-
-        return new ServicoResponseDTO(servicoRepository.save(entidade));
+        servicoMapper.atualizarDados(servicoAtualizado, servico);
+        return servicoMapper.toResponseDTO(servicoRepository.save(servico));
     }
 
     @Transactional
@@ -63,6 +63,6 @@ public class ServicoService {
 
     public Servico buscarEntidadePorId(Long id) {
         return servicoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Serviço não encontrado com id: " + id));
+                .orElseThrow(() -> new ObjectNotFoundException(ServicoMessages.SERVICO_NAO_ENCONTRADO));
     }
 }
