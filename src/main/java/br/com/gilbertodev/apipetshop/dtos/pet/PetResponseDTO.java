@@ -1,5 +1,6 @@
 package br.com.gilbertodev.apipetshop.dtos.pet;
 
+import br.com.gilbertodev.apipetshop.dtos.tutor.TutorResumoDTO;
 import br.com.gilbertodev.apipetshop.enums.PortePet;
 
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ public record PetResponseDTO(
         String observacoes,
         PortePet porte,
         Long tutorId,
-        String nomeTutor
+        String nomeTutor,
+        TutorResumoDTO tutorResumo
 ) {
 }

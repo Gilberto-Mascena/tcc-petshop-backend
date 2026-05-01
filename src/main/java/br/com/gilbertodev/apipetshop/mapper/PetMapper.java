@@ -2,6 +2,7 @@ package br.com.gilbertodev.apipetshop.mapper;
 
 import br.com.gilbertodev.apipetshop.dtos.pet.PetRequestDTO;
 import br.com.gilbertodev.apipetshop.dtos.pet.PetResponseDTO;
+import br.com.gilbertodev.apipetshop.dtos.tutor.TutorResumoDTO;
 import br.com.gilbertodev.apipetshop.entities.Pet;
 import br.com.gilbertodev.apipetshop.entities.Tutor;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,7 @@ public class PetMapper {
     public PetResponseDTO toResponseDTO(Pet pet) {
         if (pet == null) return null;
 
+        Tutor tutor = pet.getTutor();
         return new PetResponseDTO(
                 pet.getId(),
                 pet.getNome(),
@@ -36,8 +38,9 @@ public class PetMapper {
                 pet.getDataNascimento(),
                 pet.getObservacoes(),
                 pet.getPorte(),
-                pet.getTutor().getId(),
-                pet.getTutor().getNome()
+                tutor != null ? tutor.getId() : null,
+                tutor != null ? tutor.getNome() : null,
+                tutor != null ? new TutorResumoDTO(tutor) : null
         );
     }
 
