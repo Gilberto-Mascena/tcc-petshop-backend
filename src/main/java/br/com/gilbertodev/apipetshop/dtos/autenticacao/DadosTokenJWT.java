@@ -1,15 +1,7 @@
 package br.com.gilbertodev.apipetshop.dtos.autenticacao;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+public record DadosTokenJWT(
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class DadosTokenJWT {
-
-    private String token;
+        String token
+) {
 }

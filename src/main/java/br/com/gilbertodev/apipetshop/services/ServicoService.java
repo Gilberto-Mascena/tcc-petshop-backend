@@ -7,10 +7,10 @@ import br.com.gilbertodev.apipetshop.enums.messages.ServicoMessages;
 import br.com.gilbertodev.apipetshop.exceptions.ObjectNotFoundException;
 import br.com.gilbertodev.apipetshop.mapper.ServicoMapper;
 import br.com.gilbertodev.apipetshop.repositories.ServicoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class ServicoService {
@@ -31,11 +31,9 @@ public class ServicoService {
     }
 
     @Transactional(readOnly = true)
-    public List<ServicoResponseDTO> listarTodos() {
-        return servicoRepository.findAll()
-                .stream()
-                .map(servicoMapper::toResponseDTO)
-                .toList();
+    public Page<ServicoResponseDTO> listarTodos(Pageable paginacao) {
+        return servicoRepository.findAll(paginacao)
+                .map(servicoMapper::toResponseDTO);
     }
 
     @Transactional(readOnly = true)
@@ -47,18 +45,15 @@ public class ServicoService {
 
     @Transactional
     public ServicoResponseDTO atualizar(Long id, ServicoRequestDTO servicoAtualizado) {
-        Servico servico = servicoRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(ServicoMessages.SERVICO_NAO_ENCONTRADO));
+        Servico servico = buscarEntidadePorId(id);
         servicoMapper.atualizarDados(servicoAtualizado, servico);
         return servicoMapper.toResponseDTO(servicoRepository.save(servico));
     }
 
     @Transactional
     public void deletar(Long id) {
-        if (!servicoRepository.existsById(id)) {
-            throw new ObjectNotFoundException(ServicoMessages.SERVICO_NAO_ENCONTRADO);
-        }
-        servicoRepository.deleteById(id);
+        Servico servico = buscarEntidadePorId(id);
+        servicoRepository.deleteById(servico.getId());
     }
 
     public Servico buscarEntidadePorId(Long id) {

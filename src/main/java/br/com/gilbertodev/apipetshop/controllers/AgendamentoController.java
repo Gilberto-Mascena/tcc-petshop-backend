@@ -5,10 +5,15 @@ import br.com.gilbertodev.apipetshop.dtos.agendamento.AgendamentoResponseDTO;
 import br.com.gilbertodev.apipetshop.enums.StatusAgendamento;
 import br.com.gilbertodev.apipetshop.services.AgendamentoService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.List;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/agendamentos")
@@ -22,12 +27,19 @@ public class AgendamentoController {
 
     @PostMapping
     public ResponseEntity<AgendamentoResponseDTO> salvar(@RequestBody @Valid AgendamentoRequestDTO dto) {
-        return ResponseEntity.ok(agendamentoService.salvar(dto));
+        AgendamentoResponseDTO response = agendamentoService.salvar(dto);
+
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(response.id())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<AgendamentoResponseDTO>> listarTodos() {
-        return ResponseEntity.ok(agendamentoService.listarTodos());
+    public ResponseEntity<Page<AgendamentoResponseDTO>> listarTodos(@PageableDefault(size = 10, sort = {"dataHora"}, direction = Sort.Direction.ASC) Pageable paginacao) {
+        return ResponseEntity.ok(agendamentoService.listarTodos(paginacao));
     }
 
     @GetMapping("/{id}")

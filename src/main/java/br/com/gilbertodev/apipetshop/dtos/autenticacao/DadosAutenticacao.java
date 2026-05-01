@@ -1,18 +1,13 @@
 package br.com.gilbertodev.apipetshop.dtos.autenticacao;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class DadosAutenticacao {
+public record DadosAutenticacao(
 
-    @NotBlank
-    private String login;
+        @NotBlank(message = "O login é obrigatório")
+        String login,
 
-    @NotBlank
-    private String password;
+        @NotBlank(message = "A senha é obrigatória")
+        String password
+) {
 }

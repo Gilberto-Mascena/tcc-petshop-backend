@@ -11,11 +11,12 @@ import br.com.gilbertodev.apipetshop.exceptions.ObjectNotFoundException;
 import br.com.gilbertodev.apipetshop.mapper.PetMapper;
 import br.com.gilbertodev.apipetshop.repositories.PetRepository;
 import br.com.gilbertodev.apipetshop.repositories.TutorRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Service
 public class PetService {
@@ -39,7 +40,7 @@ public class PetService {
         }
 
         Tutor tutor = tutorRepository.findById(petRequestDTO.tutorId())
-                .orElseThrow(() -> new BusinessException(TutorMessages.TUTOR_NAO_ENCONTRADO));
+                .orElseThrow(() -> new ObjectNotFoundException(TutorMessages.TUTOR_NAO_ENCONTRADO));
 
         Pet pet = petMapper.toEntity(petRequestDTO, tutor);
 
@@ -47,11 +48,9 @@ public class PetService {
     }
 
     @Transactional(readOnly = true)
-    public List<PetResponseDTO> listarTodos() {
-        return petRepository.findAll()
-                .stream()
-                .map(petMapper::toResponseDTO)
-                .toList();
+    public Page<PetResponseDTO> listarTodos(Pageable paginacao) {
+        return petRepository.findAll(paginacao)
+                .map(petMapper::toResponseDTO);
     }
 
     @Transactional(readOnly = true)
@@ -63,14 +62,12 @@ public class PetService {
 
     @Transactional
     public PetResponseDTO atualizar(Long id, PetRequestDTO dto) {
-        Pet pet = petRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(PetMessages.PET_NAO_ENCONTRADO));
-
+        Pet pet = buscarEntidadePorId(id);
         petMapper.updateEntityFromDTO(dto, pet);
 
         if (dto.tutorId() != null && !dto.tutorId().equals(pet.getTutor().getId())) {
             Tutor novoTutor = tutorRepository.findById(dto.tutorId())
-                    .orElseThrow(() -> new BusinessException(TutorMessages.TUTOR_NAO_ENCONTRADO));
+                    .orElseThrow(() -> new ObjectNotFoundException(TutorMessages.TUTOR_NAO_ENCONTRADO));
             pet.setTutor(novoTutor);
         }
 
@@ -79,10 +76,8 @@ public class PetService {
 
     @Transactional
     public void deletar(Long id) {
-        if (!petRepository.existsById(id)) {
-            throw new ObjectNotFoundException(PetMessages.PET_NAO_ENCONTRADO);
-        }
-        petRepository.deleteById(id);
+        Pet pet = buscarEntidadePorId(id);
+        petRepository.deleteById(pet.getId());
     }
 
     public Pet buscarEntidadePorId(Long id) {

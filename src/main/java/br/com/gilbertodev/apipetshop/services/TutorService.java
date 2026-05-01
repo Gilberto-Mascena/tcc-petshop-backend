@@ -8,10 +8,10 @@ import br.com.gilbertodev.apipetshop.exceptions.BusinessException;
 import br.com.gilbertodev.apipetshop.exceptions.ObjectNotFoundException;
 import br.com.gilbertodev.apipetshop.mapper.TutorMapper;
 import br.com.gilbertodev.apipetshop.repositories.TutorRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class TutorService {
@@ -36,11 +36,8 @@ public class TutorService {
     }
 
     @Transactional(readOnly = true)
-    public List<TutorResponseDTO> listarTodos() {
-        return tutorRepository.findAll()
-                .stream()
-                .map(tutorMapper::toResponseDTO)
-                .toList();
+    public Page<TutorResponseDTO> listarTodos(Pageable paginacao) {
+        return tutorRepository.findAll(paginacao).map(tutorMapper::toResponseDTO);
     }
 
     @Transactional(readOnly = true)
@@ -53,9 +50,7 @@ public class TutorService {
 
     @Transactional
     public TutorResponseDTO atualizar(Long id, TutorRequestDTO tutorAtualizado) {
-        Tutor tutor = tutorRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(
-                        TutorMessages.TUTOR_NAO_ENCONTRADO));
+        Tutor tutor = buscarEntidadePorId(id);
 
         if (!tutorAtualizado.cpf().equals(tutor.getCpf())) {
             if (tutorRepository.existsByCpf(tutorAtualizado.cpf())) {
@@ -69,9 +64,12 @@ public class TutorService {
 
     @Transactional
     public void deletar(Long id) {
-        if (!tutorRepository.existsById(id)) {
-            throw new ObjectNotFoundException(TutorMessages.TUTOR_NAO_ENCONTRADO);
-        }
-        tutorRepository.deleteById(id);
+        Tutor tutor = buscarEntidadePorId(id);
+        tutorRepository.deleteById(tutor.getId());
+    }
+
+    public Tutor buscarEntidadePorId(Long id) {
+        return tutorRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(TutorMessages.TUTOR_NAO_ENCONTRADO));
     }
 }

@@ -4,11 +4,12 @@ import br.com.gilbertodev.apipetshop.dtos.pet.PetRequestDTO;
 import br.com.gilbertodev.apipetshop.dtos.pet.PetResponseDTO;
 import br.com.gilbertodev.apipetshop.services.PetService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/pets")
@@ -26,8 +27,8 @@ public class PetController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PetResponseDTO>> buscarTodos() {
-        return ResponseEntity.ok(petService.listarTodos());
+    public ResponseEntity<Page<PetResponseDTO>> listarTodos(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
+        return ResponseEntity.ok(petService.listarTodos(paginacao));
     }
 
     @GetMapping("/{id}")

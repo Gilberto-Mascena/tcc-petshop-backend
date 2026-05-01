@@ -5,18 +5,16 @@ import br.com.gilbertodev.apipetshop.dtos.agendamento.AgendamentoResponseDTO;
 import br.com.gilbertodev.apipetshop.entities.Agendamento;
 import br.com.gilbertodev.apipetshop.entities.Pet;
 import br.com.gilbertodev.apipetshop.entities.Servico;
-import br.com.gilbertodev.apipetshop.enums.PortePet;
 import br.com.gilbertodev.apipetshop.enums.StatusAgendamento;
 import br.com.gilbertodev.apipetshop.enums.messages.AgendamentoMessages;
+import br.com.gilbertodev.apipetshop.exceptions.BusinessException;
 import br.com.gilbertodev.apipetshop.exceptions.ObjectNotFoundException;
+import br.com.gilbertodev.apipetshop.mapper.AgendamentoMapper;
 import br.com.gilbertodev.apipetshop.repositories.AgendamentoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AgendamentoService {
@@ -24,59 +22,53 @@ public class AgendamentoService {
     private final AgendamentoRepository agendamentoRepository;
     private final ServicoService servicoService;
     private final PetService petService;
+    private final AgendamentoMapper agendamentoMapper;
 
-    public AgendamentoService(AgendamentoRepository agendamentoRepository, ServicoService servicoService, PetService petService) {
+    public AgendamentoService(AgendamentoRepository agendamentoRepository, ServicoService servicoService, PetService petService, AgendamentoMapper agendamentoMapper) {
         this.agendamentoRepository = agendamentoRepository;
         this.servicoService = servicoService;
         this.petService = petService;
+        this.agendamentoMapper = agendamentoMapper;
     }
 
     @Transactional
     public AgendamentoResponseDTO salvar(AgendamentoRequestDTO dto) {
-        Pet pet = petService.buscarEntidadePorId(dto.getPetId());
-        Servico servico = servicoService.buscarEntidadePorId(dto.getServicoId());
+        Pet pet = petService.buscarEntidadePorId(dto.petId());
+        Servico servico = servicoService.buscarEntidadePorId(dto.servicoId());
 
-        Agendamento agendamento = new Agendamento();
-        agendamento.setPet(pet);
-        agendamento.setServico(servico);
-        agendamento.setDataHora(dto.getDataHora());
-        agendamento.setObservacoes(dto.getObservacoes());
-        agendamento.setStatus(StatusAgendamento.PENDENTE);
-
-        BigDecimal valorCalculado = calcularValorComAcrescimo(servico.getValorBase(), pet.getPorte());
-        agendamento.setValorTotal(valorCalculado);
-
-        agendamento = agendamentoRepository.save(agendamento);
-        return new AgendamentoResponseDTO(agendamento);
+        Agendamento agendamento = agendamentoMapper.toEntity(dto, pet, servico);
+        agendamento.calcularValorFinal();
+        return agendamentoMapper.toResponseDTO(agendamentoRepository.save(agendamento));
     }
 
-    public List<AgendamentoResponseDTO> listarTodos() {
-        return agendamentoRepository.findAll().stream()
-                .map(AgendamentoResponseDTO::new)
-                .collect(Collectors.toList());
+    @Transactional(readOnly = true)
+    public Page<AgendamentoResponseDTO> listarTodos(Pageable paginacao) {
+        return agendamentoRepository.findAll(paginacao)
+                .map(agendamentoMapper::toResponseDTO);
+
     }
 
+    @Transactional(readOnly = true)
     public AgendamentoResponseDTO buscarPorId(Long id) {
-        Agendamento agendamento = agendamentoRepository.findById(id)
+        return agendamentoRepository.findById(id)
+                .map(agendamentoMapper::toResponseDTO)
                 .orElseThrow(() -> new ObjectNotFoundException(AgendamentoMessages.AGENDAMENTO_NAO_ENCONTRADO));
-        return new AgendamentoResponseDTO(agendamento);
     }
 
     @Transactional
     public AgendamentoResponseDTO atualizarStatus(Long id, StatusAgendamento novoStatus) {
-        Agendamento agendamento = agendamentoRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(AgendamentoMessages.AGENDAMENTO_NAO_ENCONTRADO));
+        Agendamento agendamento = buscarEntidadePorId(id);
+
+        if (agendamento.getStatus() == StatusAgendamento.REALIZADO) {
+            throw new BusinessException(AgendamentoMessages.STATUS_NAO_PODE_SER_ALTERADO);
+        }
 
         agendamento.setStatus(novoStatus);
-        return new AgendamentoResponseDTO(agendamento);
+        return agendamentoMapper.toResponseDTO(agendamentoRepository.save(agendamento));
     }
 
-    private BigDecimal calcularValorComAcrescimo(BigDecimal valorBase, PortePet porte) {
-        BigDecimal multiplicador = switch (porte) {
-            case MEDIO -> new BigDecimal("1.20");
-            case GRANDE -> new BigDecimal("1.50");
-            default -> BigDecimal.ONE;
-        };
-        return valorBase.multiply(multiplicador).setScale(2, RoundingMode.HALF_UP);
+    public Agendamento buscarEntidadePorId(Long id) {
+        return agendamentoRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(AgendamentoMessages.AGENDAMENTO_NAO_ENCONTRADO));
     }
 }

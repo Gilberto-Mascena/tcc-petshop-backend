@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum StatusAgendamento {
 
+    AGENDADO("Agendado"),
     PENDENTE("Pendente"),
     CONFIRMADO("Confirmado"),
     CANCELADO("Cancelado"),

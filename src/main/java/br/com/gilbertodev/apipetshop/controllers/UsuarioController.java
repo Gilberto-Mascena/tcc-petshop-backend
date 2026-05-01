@@ -29,8 +29,8 @@ public class UsuarioController {
     @Transactional
     public ResponseEntity<Void> cadastrarUsuario(@Valid @RequestBody CriaUsuarioRequestDTO criaUsuarioRequestDTO) {
 
-        var senhaCriptografada = passwordEncoder.encode(criaUsuarioRequestDTO.getPassword());
-        var novoUsuario = new Usuario(criaUsuarioRequestDTO.getLogin(), senhaCriptografada);
+        var senhaCriptografada = passwordEncoder.encode(criaUsuarioRequestDTO.password());
+        var novoUsuario = new Usuario(criaUsuarioRequestDTO.login(), senhaCriptografada);
 
         usuarioRepository.save(novoUsuario);
 

@@ -1,7 +1,10 @@
 package br.com.gilbertodev.apipetshop.dtos.pet;
 
 import br.com.gilbertodev.apipetshop.enums.PortePet;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+
 import java.time.LocalDate;
 
 public record PetRequestDTO(
@@ -23,4 +26,5 @@ public record PetRequestDTO(
 
         @NotNull(message = "O porte do pet é obrigatório")
         PortePet porte
-) {}
+) {
+}
