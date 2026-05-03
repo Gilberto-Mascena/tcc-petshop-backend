@@ -44,7 +44,7 @@ public class PetMapper {
         );
     }
 
-    public void updateEntityFromDTO(PetRequestDTO dto, Pet pet) {
+    public void atualizarDados(PetRequestDTO dto, Pet pet) {
         if (dto == null || pet == null) return;
 
         if (dto.nome() != null) pet.setNome(dto.nome());

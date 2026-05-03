@@ -63,7 +63,7 @@ public class PetService {
     @Transactional
     public PetResponseDTO atualizar(Long id, PetRequestDTO dto) {
         Pet pet = buscarEntidadePorId(id);
-        petMapper.updateEntityFromDTO(dto, pet);
+        petMapper.atualizarDados(dto, pet);
 
         if (dto.tutorId() != null && !dto.tutorId().equals(pet.getTutor().getId())) {
             Tutor novoTutor = tutorRepository.findById(dto.tutorId())

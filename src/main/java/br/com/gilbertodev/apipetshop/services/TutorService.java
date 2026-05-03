@@ -49,15 +49,15 @@ public class TutorService {
     }
 
     @Transactional
-    public TutorResponseDTO atualizar(Long id, TutorRequestDTO tutorAtualizado) {
+    public TutorResponseDTO atualizar(Long id, TutorRequestDTO dto) {
         Tutor tutor = buscarEntidadePorId(id);
 
-        if (!tutorAtualizado.cpf().equals(tutor.getCpf())) {
-            if (tutorRepository.existsByCpf(tutorAtualizado.cpf())) {
+        if (!dto.cpf().equals(tutor.getCpf())) {
+            if (tutorRepository.existsByCpf(dto.cpf())) {
                 throw new BusinessException(TutorMessages.CPF_JA_CADASTRADO);
             }
         }
-        tutor.atualizarDados(tutorAtualizado);
+        tutorMapper.atualizarDados(dto, tutor);
         Tutor tutorSalvo = tutorRepository.save(tutor);
         return tutorMapper.toResponseDTO(tutorSalvo);
     }

@@ -31,17 +31,10 @@ public class ServicoMapper {
     }
 
     public void atualizarDados(ServicoRequestDTO dto, Servico servico) {
-
         if (dto == null || servico == null) return;
 
-        if (dto.tipo() != null) {
-            servico.setTipo(dto.tipo());
-        }
-        if (dto.observacoes() != null) {
-            servico.setObservacoes(dto.observacoes());
-        }
-        if (dto.valorBase() != null) {
-            servico.setValorBase(dto.valorBase());
-        }
+        if (dto.tipo() != null) servico.setTipo(dto.tipo());
+        if (dto.observacoes() != null) servico.setObservacoes(dto.observacoes());
+        if (dto.valorBase() != null) servico.setValorBase(dto.valorBase());
     }
 }
