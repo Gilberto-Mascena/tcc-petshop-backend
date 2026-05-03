@@ -47,6 +47,11 @@ public class AgendamentoController {
         return ResponseEntity.ok(agendamentoService.buscarPorId(id));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<AgendamentoResponseDTO> atualizar(@PathVariable Long id, @RequestBody @Valid AgendamentoRequestDTO dto) {
+        return ResponseEntity.ok(agendamentoService.atualizar(id, dto));
+    }
+
     @PatchMapping("/{id}/status")
     public ResponseEntity<AgendamentoResponseDTO> atualizarStatus(@PathVariable Long id, @RequestParam StatusAgendamento novoStatus) {
         return ResponseEntity.ok(agendamentoService.atualizarStatus(id, novoStatus));

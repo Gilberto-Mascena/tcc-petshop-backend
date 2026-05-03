@@ -38,4 +38,15 @@ public class AgendamentoMapper {
                 agendamento.getValorTotal()
         );
     }
+
+    public void atualizarDados(AgendamentoRequestDTO dto, Agendamento agendamento, Pet pet, Servico servico) {
+        if (dto == null || agendamento == null) return;
+
+        if (dto.dataHora() != null) agendamento.setDataHora(dto.dataHora());
+        if (pet != null) agendamento.setPet(pet);
+        if (servico != null) agendamento.setServico(servico);
+        if (dto.observacoes() != null) agendamento.setObservacoes(dto.observacoes());
+
+        agendamento.calcularValorFinal();
+    }
 }

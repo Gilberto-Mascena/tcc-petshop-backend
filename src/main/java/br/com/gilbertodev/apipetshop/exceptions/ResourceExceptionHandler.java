@@ -18,7 +18,6 @@ public class ResourceExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<StandardError> handleBusinessException(BusinessException e, HttpServletRequest request) {
-
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
         StandardError err = montarErro(e.getCodigo(), e.getMessage(), status, request);
         return ResponseEntity.status(status).body(err);
@@ -26,7 +25,6 @@ public class ResourceExceptionHandler {
 
     @ExceptionHandler(ObjectNotFoundException.class)
     public ResponseEntity<StandardError> handleObjectNotFoundException(ObjectNotFoundException e, HttpServletRequest request) {
-
         HttpStatus status = HttpStatus.NOT_FOUND;
         StandardError err = montarErro(e.getCodigo(), e.getMessage(), status, request);
         return ResponseEntity.status(status).body(err);
@@ -34,24 +32,13 @@ public class ResourceExceptionHandler {
 
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<StandardError> handleAuthException(AuthException e, HttpServletRequest request) {
-
         HttpStatus status = HttpStatus.UNAUTHORIZED;
-        StandardError err = montarErro(e.getCodigo(), e.getMessage(), status, request);
-        return ResponseEntity.status(status).body(err);
-    }
-
-    @ExceptionHandler(TypeMismatchException.class)
-
-    public ResponseEntity<StandardError> handleTypeMismatchException(TypeMismatchException e, HttpServletRequest request) {
-
-        HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError err = montarErro(e.getCodigo(), e.getMessage(), status, request);
         return ResponseEntity.status(status).body(err);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<StandardError> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException e, HttpServletRequest request) {
-
         String mensagem = "O parâmetro '" + e.getName() + "' deve ser do tipo " + e.getRequiredType().getSimpleName();
         HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError err = montarErro("PARAM_INVALIDO", mensagem, status, request);
@@ -60,9 +47,7 @@ public class ResourceExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<StandardError> handleGenericException(Exception e, HttpServletRequest request) {
-
         log.error("Erro inesperado: ", e);
-
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         StandardError err = montarErro("ERRO_INTERNO", "Ocorreu um erro interno inesperado. Tente novamente mais tarde.", status, request);
         return ResponseEntity.status(status).body(err);

@@ -33,6 +33,10 @@ public class AgendamentoService {
 
     @Transactional
     public AgendamentoResponseDTO salvar(AgendamentoRequestDTO dto) {
+        if (agendamentoRepository.existsByDataHoraAndStatusNot(dto.dataHora(), StatusAgendamento.CANCELADO)) {
+            throw new BusinessException(AgendamentoMessages.HORARIO_INDISPONIVEL);
+        }
+
         Pet pet = petService.buscarEntidadePorId(dto.petId());
         Servico servico = servicoService.buscarEntidadePorId(dto.servicoId());
 
@@ -53,6 +57,24 @@ public class AgendamentoService {
         return agendamentoRepository.findById(id)
                 .map(agendamentoMapper::toResponseDTO)
                 .orElseThrow(() -> new ObjectNotFoundException(AgendamentoMessages.AGENDAMENTO_NAO_ENCONTRADO));
+    }
+
+    @Transactional
+    public AgendamentoResponseDTO atualizar(Long id, AgendamentoRequestDTO dto) {
+        Agendamento agendamento = buscarEntidadePorId(id);
+
+        if (!agendamento.getDataHora().equals(dto.dataHora())) {
+            if (agendamentoRepository.existsByDataHoraAndStatusNot(dto.dataHora(), StatusAgendamento.CANCELADO)) {
+                throw new BusinessException(AgendamentoMessages.HORARIO_INDISPONIVEL);
+            }
+        }
+
+        Pet pet = petService.buscarEntidadePorId(dto.petId());
+        Servico servico = servicoService.buscarEntidadePorId(dto.servicoId());
+
+        agendamentoMapper.atualizarDados(dto, agendamento, pet, servico);
+
+        return agendamentoMapper.toResponseDTO(agendamentoRepository.save(agendamento));
     }
 
     @Transactional
