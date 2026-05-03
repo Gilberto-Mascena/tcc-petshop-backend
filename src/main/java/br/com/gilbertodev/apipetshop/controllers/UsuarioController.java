@@ -1,13 +1,12 @@
 package br.com.gilbertodev.apipetshop.controllers;
 
 import br.com.gilbertodev.apipetshop.dtos.usuario.CriaUsuarioRequestDTO;
-import br.com.gilbertodev.apipetshop.entities.Usuario;
-import br.com.gilbertodev.apipetshop.repositories.UsuarioRepository;
+import br.com.gilbertodev.apipetshop.services.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,23 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
-    private final UsuarioRepository usuarioRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final UsuarioService usuarioService;
 
-    public UsuarioController(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
-        this.usuarioRepository = usuarioRepository;
-        this.passwordEncoder = passwordEncoder;
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
     }
 
     @PostMapping
-    @Transactional
-    public ResponseEntity<Void> cadastrarUsuario(@Valid @RequestBody CriaUsuarioRequestDTO criaUsuarioRequestDTO) {
-
-        var senhaCriptografada = passwordEncoder.encode(criaUsuarioRequestDTO.password());
-        var novoUsuario = new Usuario(criaUsuarioRequestDTO.login(), senhaCriptografada);
-
-        usuarioRepository.save(novoUsuario);
-
+    @Operation(summary = "Cadastrar usuário", description = "Cria um novo usuário com senha criptografada")
+    @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso")
+    public ResponseEntity<Void> cadastrarUsuario(@Valid @RequestBody CriaUsuarioRequestDTO dto) {
+        usuarioService.cadastrar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

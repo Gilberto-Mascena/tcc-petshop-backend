@@ -1,4 +1,4 @@
-package br.com.gilbertodev.apipetshop.services;
+package br.com.gilbertodev.apipetshop.security.token;
 
 import br.com.gilbertodev.apipetshop.entities.Usuario;
 import com.auth0.jwt.JWT;
@@ -20,21 +20,19 @@ public class TokenService {
 
     public String gerarToken(Usuario usuario) {
         try {
-            Algorithm algoritmo = Algorithm.HMAC256(secret);
             return JWT.create()
                     .withIssuer("api-petshop")
                     .withSubject(usuario.getLogin())
                     .withExpiresAt(dataExpiracao())
-                    .sign(algoritmo);
+                    .sign(getAlgorithm());
         } catch (JWTCreationException exception) {
-            throw new RuntimeException("Erro ao gerar token jwt", exception);
+            throw new RuntimeException("Erro ao gerar token JWT", exception);
         }
     }
 
     public String getSubject(String tokenJWT) {
         try {
-            Algorithm algoritmo = Algorithm.HMAC256(secret);
-            return JWT.require(algoritmo)
+            return JWT.require(getAlgorithm())
                     .withIssuer("api-petshop")
                     .build()
                     .verify(tokenJWT)
@@ -44,8 +42,11 @@ public class TokenService {
         }
     }
 
-    private Instant dataExpiracao() {
+    private Algorithm getAlgorithm() {
+        return Algorithm.HMAC256(secret);
+    }
 
+    private Instant dataExpiracao() {
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
     }
 }

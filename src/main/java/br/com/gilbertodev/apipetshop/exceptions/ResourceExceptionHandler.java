@@ -1,10 +1,13 @@
 package br.com.gilbertodev.apipetshop.exceptions;
 
+import br.com.gilbertodev.apipetshop.enums.messages.UsuarioMessages;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -34,6 +37,40 @@ public class ResourceExceptionHandler {
     public ResponseEntity<StandardError> handleAuthException(AuthException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
         StandardError err = montarErro(e.getCodigo(), e.getMessage(), status, request);
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<StandardError> handleAccessDeniedException(AccessDeniedException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        StandardError err = montarErro(e.getCodigo(), e.getMessage(), status, request);
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(AuthenticationErrorException.class)
+    public ResponseEntity<StandardError> handleAuthenticationException(AuthenticationErrorException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        StandardError err = montarErro(e.getCodigo(), e.getMessage(), status, request);
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<StandardError> handleUsernameNotFound(UsernameNotFoundException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        StandardError err = montarErro(UsuarioMessages.USUARIO_NAO_ENCONTRADO.getCodigo(), UsuarioMessages.USUARIO_NAO_ENCONTRADO.getMensagem(), status, request);
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<StandardError> handleBadCredentials(BadCredentialsException e, HttpServletRequest request) {
+        log.warn("Tentativa de acesso não autorizada: IP {}, Usuário/Login: {}",
+                request.getRemoteAddr(),
+                request.getParameter("login"));
+
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        StandardError err = montarErro(UsuarioMessages.CREDENCIAIS_INVALIDAS.getCodigo(),
+                UsuarioMessages.CREDENCIAIS_INVALIDAS.getMensagem(),
+                status, request);
         return ResponseEntity.status(status).body(err);
     }
 

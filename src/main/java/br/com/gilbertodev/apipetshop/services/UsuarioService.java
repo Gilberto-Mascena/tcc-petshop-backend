@@ -1,27 +1,27 @@
 package br.com.gilbertodev.apipetshop.services;
 
-import br.com.gilbertodev.apipetshop.enums.messages.UsuarioMessages;
-import br.com.gilbertodev.apipetshop.exceptions.AuthException;
+import br.com.gilbertodev.apipetshop.dtos.usuario.CriaUsuarioRequestDTO;
+import br.com.gilbertodev.apipetshop.entities.Usuario;
 import br.com.gilbertodev.apipetshop.repositories.UsuarioRepository;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class UsuarioService implements UserDetailsService {
+public class UsuarioService {
 
-    private final UsuarioRepository usuarioRepository;
+    private final UsuarioRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
+    public UsuarioService(UsuarioRepository repository, PasswordEncoder passwordEncoder) {
+        this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) {
-        var usuario = usuarioRepository.findByLogin(username);
-        if (usuario == null) {
-            throw new AuthException(UsuarioMessages.USUARIO_NAO_ENCONTRADO);
-        }
-        return usuario;
+    @Transactional
+    public void cadastrar(CriaUsuarioRequestDTO dto) {
+        var senhaCriptografada = passwordEncoder.encode(dto.password());
+        var novoUsuario = new Usuario(dto.login(), senhaCriptografada);
+        repository.save(novoUsuario);
     }
 }

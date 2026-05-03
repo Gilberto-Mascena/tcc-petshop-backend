@@ -1,9 +1,11 @@
-package br.com.gilbertodev.apipetshop.controllers;
+package br.com.gilbertodev.apipetshop.security.controller;
 
 import br.com.gilbertodev.apipetshop.dtos.autenticacao.DadosAutenticacao;
 import br.com.gilbertodev.apipetshop.dtos.autenticacao.DadosTokenJWT;
 import br.com.gilbertodev.apipetshop.entities.Usuario;
-import br.com.gilbertodev.apipetshop.services.TokenService;
+import br.com.gilbertodev.apipetshop.security.token.TokenService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,11 +28,15 @@ public class AutenticacaoController {
     }
 
     @PostMapping
+    @Operation(summary = "Realiza login", description = "Autentica usuário e retorna token JWT")
+    @ApiResponse(responseCode = "200", description = "Login bem sucedido")
+    @ApiResponse(responseCode = "403", description = "Credenciais inválidas")
     public ResponseEntity<DadosTokenJWT> efetuarLogin(@RequestBody @Valid DadosAutenticacao dados) {
 
         var authenticationToken = new UsernamePasswordAuthenticationToken(dados.login(), dados.password());
         var authentication = authenticationManager.authenticate(authenticationToken);
         var tokenJWT = tokenService.gerarToken((Usuario) authentication.getPrincipal());
+
         return ResponseEntity.ok(new DadosTokenJWT(tokenJWT));
     }
 }
