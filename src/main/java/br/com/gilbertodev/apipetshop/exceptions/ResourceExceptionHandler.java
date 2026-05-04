@@ -6,8 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -58,6 +61,33 @@ public class ResourceExceptionHandler {
     public ResponseEntity<StandardError> handleUsernameNotFound(UsernameNotFoundException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
         StandardError err = montarErro(UsuarioMessages.USUARIO_NAO_ENCONTRADO.getCodigo(), UsuarioMessages.USUARIO_NAO_ENCONTRADO.getMensagem(), status, request);
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<StandardError> handleHttpMessageNotReadable(HttpMessageNotReadableException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError err = montarErro("DADOS_INVALIDOS",
+                "Corpo da requisição vazio ou formato JSON inválido.",
+                status, request);
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<StandardError> handleValidationExceptions(MethodArgumentNotValidException e, HttpServletRequest request) {
+        String mensagem = e.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError err = montarErro("VALIDACAO_FALHA", mensagem, status, request);
+
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<StandardError> handleMethodNotSupported(HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.METHOD_NOT_ALLOWED;
+        StandardError err = montarErro("METODO_INVALIDO",
+                "Método HTTP não permitido para este endpoint.",
+                status, request);
         return ResponseEntity.status(status).body(err);
     }
 
