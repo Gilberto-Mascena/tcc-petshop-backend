@@ -1,6 +1,6 @@
 package br.com.gilbertodev.apipetshop.security.filter;
 
-import br.com.gilbertodev.apipetshop.enums.messages.UsuarioMessages;
+import br.com.gilbertodev.apipetshop.messages.UsuarioMessages;
 import br.com.gilbertodev.apipetshop.exceptions.AuthenticationErrorException;
 import br.com.gilbertodev.apipetshop.repositories.UsuarioRepository;
 import br.com.gilbertodev.apipetshop.security.token.TokenService;

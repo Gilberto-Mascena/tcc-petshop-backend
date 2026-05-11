@@ -1,6 +1,6 @@
 package br.com.gilbertodev.apipetshop.security.handler;
 
-import br.com.gilbertodev.apipetshop.enums.messages.UsuarioMessages;
+import br.com.gilbertodev.apipetshop.messages.UsuarioMessages;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Qualifier;

@@ -1,9 +1,10 @@
 package br.com.gilbertodev.apipetshop.exceptions;
 
-import br.com.gilbertodev.apipetshop.enums.messages.UsuarioMessages;
+import br.com.gilbertodev.apipetshop.messages.UsuarioMessages;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -101,6 +102,14 @@ public class ResourceExceptionHandler {
         StandardError err = montarErro(UsuarioMessages.CREDENCIAIS_INVALIDAS.getCodigo(),
                 UsuarioMessages.CREDENCIAIS_INVALIDAS.getMensagem(),
                 status, request);
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<StandardError> handleDataIntegrityViolation(DataIntegrityViolationException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        String mensagem = "Conflito de dados: Este registro já existe no sistema ou não pode ser processado.";
+        StandardError err = montarErro("CONFLITO_DADOS", mensagem, status, request);
         return ResponseEntity.status(status).body(err);
     }
 

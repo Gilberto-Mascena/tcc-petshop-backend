@@ -6,7 +6,7 @@ import br.com.gilbertodev.apipetshop.entities.Agendamento;
 import br.com.gilbertodev.apipetshop.entities.Pet;
 import br.com.gilbertodev.apipetshop.entities.Servico;
 import br.com.gilbertodev.apipetshop.enums.StatusAgendamento;
-import br.com.gilbertodev.apipetshop.enums.messages.AgendamentoMessages;
+import br.com.gilbertodev.apipetshop.messages.AgendamentoMessages;
 import br.com.gilbertodev.apipetshop.exceptions.BusinessException;
 import br.com.gilbertodev.apipetshop.exceptions.ObjectNotFoundException;
 import br.com.gilbertodev.apipetshop.mapper.AgendamentoMapper;

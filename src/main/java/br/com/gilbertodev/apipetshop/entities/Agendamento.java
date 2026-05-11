@@ -1,7 +1,7 @@
 package br.com.gilbertodev.apipetshop.entities;
 
 import br.com.gilbertodev.apipetshop.enums.StatusAgendamento;
-import br.com.gilbertodev.apipetshop.enums.messages.AgendamentoMessages;
+import br.com.gilbertodev.apipetshop.messages.AgendamentoMessages;
 import br.com.gilbertodev.apipetshop.exceptions.BusinessException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

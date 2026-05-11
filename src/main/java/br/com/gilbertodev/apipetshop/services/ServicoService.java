@@ -3,7 +3,7 @@ package br.com.gilbertodev.apipetshop.services;
 import br.com.gilbertodev.apipetshop.dtos.servico.ServicoRequestDTO;
 import br.com.gilbertodev.apipetshop.dtos.servico.ServicoResponseDTO;
 import br.com.gilbertodev.apipetshop.entities.Servico;
-import br.com.gilbertodev.apipetshop.enums.messages.ServicoMessages;
+import br.com.gilbertodev.apipetshop.messages.ServicoMessages;
 import br.com.gilbertodev.apipetshop.exceptions.ObjectNotFoundException;
 import br.com.gilbertodev.apipetshop.mapper.ServicoMapper;
 import br.com.gilbertodev.apipetshop.repositories.ServicoRepository;

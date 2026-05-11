@@ -1,6 +1,6 @@
 package br.com.gilbertodev.apipetshop.security.service;
 
-import br.com.gilbertodev.apipetshop.enums.messages.UsuarioMessages;
+import br.com.gilbertodev.apipetshop.messages.UsuarioMessages;
 import br.com.gilbertodev.apipetshop.repositories.UsuarioRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

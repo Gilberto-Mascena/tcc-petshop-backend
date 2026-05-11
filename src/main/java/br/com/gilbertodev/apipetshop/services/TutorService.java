@@ -3,7 +3,7 @@ package br.com.gilbertodev.apipetshop.services;
 import br.com.gilbertodev.apipetshop.dtos.tutor.TutorRequestDTO;
 import br.com.gilbertodev.apipetshop.dtos.tutor.TutorResponseDTO;
 import br.com.gilbertodev.apipetshop.entities.Tutor;
-import br.com.gilbertodev.apipetshop.enums.messages.TutorMessages;
+import br.com.gilbertodev.apipetshop.messages.TutorMessages;
 import br.com.gilbertodev.apipetshop.exceptions.BusinessException;
 import br.com.gilbertodev.apipetshop.exceptions.ObjectNotFoundException;
 import br.com.gilbertodev.apipetshop.mapper.TutorMapper;
