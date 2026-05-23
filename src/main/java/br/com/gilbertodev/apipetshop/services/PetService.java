@@ -4,11 +4,11 @@ import br.com.gilbertodev.apipetshop.dtos.pet.PetRequestDTO;
 import br.com.gilbertodev.apipetshop.dtos.pet.PetResponseDTO;
 import br.com.gilbertodev.apipetshop.entities.Pet;
 import br.com.gilbertodev.apipetshop.entities.Tutor;
-import br.com.gilbertodev.apipetshop.messages.PetMessages;
-import br.com.gilbertodev.apipetshop.messages.TutorMessages;
 import br.com.gilbertodev.apipetshop.exceptions.BusinessException;
 import br.com.gilbertodev.apipetshop.exceptions.ObjectNotFoundException;
 import br.com.gilbertodev.apipetshop.mapper.PetMapper;
+import br.com.gilbertodev.apipetshop.messages.PetMessages;
+import br.com.gilbertodev.apipetshop.messages.TutorMessages;
 import br.com.gilbertodev.apipetshop.repositories.PetRepository;
 import br.com.gilbertodev.apipetshop.repositories.TutorRepository;
 import org.springframework.data.domain.Page;
@@ -60,12 +60,27 @@ public class PetService {
                 .orElseThrow(() -> new ObjectNotFoundException(PetMessages.PET_NAO_ENCONTRADO));
     }
 
+    @Transactional(readOnly = true)
+    public Page<PetResponseDTO> buscaGlobal(String termo, Pageable paginacao) {
+        if (termo == null || termo.isBlank()) {
+            return Page.empty(paginacao);
+        }
+
+        String termoLimpo = termo.trim();
+
+        if (termoLimpo.length() < 3) {
+            throw new BusinessException(PetMessages.TERMO_BUSCA_CURTO);
+        }
+
+        return petRepository.buscaGlobal(termoLimpo, paginacao).map(petMapper::toResponseDTO);
+    }
+
     @Transactional
     public PetResponseDTO atualizar(Long id, PetRequestDTO dto) {
         Pet pet = buscarEntidadePorId(id);
         petMapper.atualizarDados(dto, pet);
 
-        if (dto.tutorId() != null && !dto.tutorId().equals(pet.getTutor().getId())) {
+        if (dto.tutorId() != null && (pet.getTutor() == null || !dto.tutorId().equals(pet.getTutor().getId()))) {
             Tutor novoTutor = tutorRepository.findById(dto.tutorId())
                     .orElseThrow(() -> new ObjectNotFoundException(TutorMessages.TUTOR_NAO_ENCONTRADO));
             pet.setTutor(novoTutor);

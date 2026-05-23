@@ -8,9 +8,9 @@ public enum PetMessages implements MessageBase {
 
     PET_IDADE_INVALIDA("PET_001", "O pet não pode ter mais de 30 anos."),
     PET_NAO_ENCONTRADO("PET_002", "Pet não localizado."),
-    PORTE_OBRIGATORIO("PET-003", "O porte do pet é obrigatório para realizar esta operação."),
-    TUTOR_NAO_VINCULADO("PET-004", "O pet deve estar obrigatoriamente vinculado a um tutor.");
-
+    PORTE_OBRIGATORIO("PET_003", "O porte do pet é obrigatório para realizar esta operação."),
+    TUTOR_NAO_VINCULADO("PET_004", "O pet deve estar obrigatoriamente vinculado a um tutor."),
+    TERMO_BUSCA_CURTO("PET_005", "O termo de busca deve conter pelo menos 3 caracteres.");
 
     private final String codigo;
     private final String mensagem;

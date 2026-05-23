@@ -25,59 +25,93 @@ public class TutorController {
     }
 
     @PostMapping
-    @Operation(summary = "Criar um novo tutor", description = "Cria um novo tutor com as informações fornecidas no corpo da requisição.")
+    @Operation(
+            summary = "Criar um novo tutor",
+            description = "Cria um novo tutor com as informações fornecidas no corpo da requisição.")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Tutor criado com sucesso"),
-            @ApiResponse(responseCode = "422", description = "Dados inválidos.")
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Tutor criado com sucesso"),
+            @ApiResponse(
+                    responseCode = "422",
+                    description = "Dados inválidos.")
     })
     public ResponseEntity<TutorResponseDTO> salvar(@RequestBody @Valid TutorRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(tutorService.salvar(dto));
     }
 
     @GetMapping
-    @Operation(summary = "Listar todos os tutores", description = "Retorna uma lista paginada de todos os tutores cadastrados.")
+    @Operation(
+            summary = "Listar todos os tutores",
+            description = "Retorna uma lista paginada de todos os tutores cadastrados.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Lista de tutores retornada com sucesso")
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Lista de tutores retornada com sucesso")
     })
     public ResponseEntity<Page<TutorResponseDTO>> listarTodos(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
         return ResponseEntity.ok(tutorService.listarTodos(paginacao));
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Buscar tutor por ID", description = "Retorna os detalhes de um tutor específico com base no ID fornecido.")
+    @Operation(
+            summary = "Buscar tutor por ID",
+            description = "Retorna os detalhes de um tutor específico com base no ID fornecido.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Tutor encontrado e retornado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Tutor não encontrado")
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Tutor encontrado e retornado com sucesso"),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Tutor não encontrado")
     })
     public ResponseEntity<TutorResponseDTO> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(tutorService.buscarPorId(id));
     }
 
     @GetMapping("/buscar")
-    @Operation(summary = "Busca global de tutores", description = "Realiza uma busca global por tutores com base em um termo fornecido, que pode corresponder ao nome, CPF ou e-mail do tutor. Retorna uma lista paginada de tutores que correspondem ao termo de busca.")
+    @Operation(
+            summary = "Busca global de tutores",
+            description = "Realiza uma busca global por tutores com base em um termo fornecido, que pode corresponder ao nome, CPF ou e-mail do tutor. Retorna uma lista paginada de tutores que correspondem ao termo de busca.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso, retornando os tutores correspondentes"),
-            @ApiResponse(responseCode = "422", description = "Termo de busca inválido ou muito curto")
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Busca realizada com sucesso, retornando os tutores correspondentes"),
+            @ApiResponse(
+                    responseCode = "422",
+                    description = "Termo de busca inválido ou muito curto")
     })
-    public ResponseEntity<Page<TutorResponseDTO>> buscaGlobal(@RequestParam String termo, @PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
+    public ResponseEntity<Page<TutorResponseDTO>> buscaGlobal(@RequestParam(required = false) String termo, @PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
         return ResponseEntity.ok(tutorService.buscaGlobal(termo, paginacao));
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Atualizar tutor", description = "Atualiza as informações de um tutor existente com base no ID fornecido e nos dados fornecidos no corpo da requisição.")
+    @Operation(
+            summary = "Atualizar tutor",
+            description = "Atualiza as informações de um tutor existente com base no ID fornecido e nos dados fornecidos no corpo da requisição.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Tutor atualizado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Tutor não encontrado")
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Tutor atualizado com sucesso"),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Tutor não encontrado")
     })
     public ResponseEntity<TutorResponseDTO> atualizar(@PathVariable Long id, @RequestBody @Valid TutorRequestDTO dto) {
         return ResponseEntity.ok(tutorService.atualizar(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Deletar tutor", description = "Remove um tutor do sistema com base no ID fornecido.")
+    @Operation(
+            summary = "Deletar tutor",
+            description = "Remove um tutor do sistema com base no ID fornecido.")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Tutor deletado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Tutor não encontrado para deleção")
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Tutor deletado com sucesso"),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Tutor não encontrado para deleção")
     })
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         tutorService.deletar(id);
