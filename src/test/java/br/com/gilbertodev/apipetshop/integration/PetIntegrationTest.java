@@ -65,6 +65,17 @@ public class PetIntegrationTest {
                 .andExpect(jsonPath("$.nome").value("Rex"));
     }
 
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("Deve devolver (400) Bad Request ao cadastrar Pet com dados inválidos")
+    void deveRetornarBadRequestAoCadastrarPetComDadosInvalidos() throws Exception {
+
+        mockMvc.perform(post(urlPets)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonPetInvalido))
+                .andExpect(status().isBadRequest());
+    }
+
     private Tutor criarTutorTeste() {
         Tutor tutor = new Tutor();
         tutor.setNome("Bob Blue");
@@ -82,16 +93,5 @@ public class PetIntegrationTest {
         ));
 
         return tutorRepository.save(tutor);
-    }
-
-    @Test
-    @WithMockUser(roles = "ADMIN")
-    @DisplayName("Deve devolver (400) Bad Request ao cadastrar Pet com dados inválidos")
-    void deveRetornarBadRequestAoCadastrarPetComDadosInvalidos() throws Exception {
-
-        mockMvc.perform(post(urlPets)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonPetInvalido))
-                .andExpect(status().isBadRequest());
     }
 }

@@ -3,10 +3,10 @@ package br.com.gilbertodev.apipetshop.services;
 import br.com.gilbertodev.apipetshop.dtos.tutor.TutorRequestDTO;
 import br.com.gilbertodev.apipetshop.dtos.tutor.TutorResponseDTO;
 import br.com.gilbertodev.apipetshop.entities.Tutor;
-import br.com.gilbertodev.apipetshop.messages.TutorMessages;
 import br.com.gilbertodev.apipetshop.exceptions.BusinessException;
 import br.com.gilbertodev.apipetshop.exceptions.ObjectNotFoundException;
 import br.com.gilbertodev.apipetshop.mapper.TutorMapper;
+import br.com.gilbertodev.apipetshop.messages.TutorMessages;
 import br.com.gilbertodev.apipetshop.repositories.TutorRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,6 +46,21 @@ public class TutorService {
                 .map(tutorMapper::toResponseDTO)
                 .orElseThrow(() -> new ObjectNotFoundException(
                         TutorMessages.TUTOR_NAO_ENCONTRADO));
+    }
+
+    @Transactional(readOnly = true)
+    public Page<TutorResponseDTO> buscaGlobal(String termo, Pageable paginacao) {
+        if (termo == null || termo.isBlank()) {
+            return Page.empty(paginacao);
+        }
+
+        String termoLimpo = termo.trim();
+
+        if (termoLimpo.length() < 3) {
+            throw new BusinessException(TutorMessages.TERMO_BUSCA_CURTO);
+        }
+
+        return tutorRepository.buscaGlobal(termoLimpo, paginacao).map(tutorMapper::toResponseDTO);
     }
 
     @Transactional
