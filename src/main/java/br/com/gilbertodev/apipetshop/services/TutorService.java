@@ -60,7 +60,8 @@ public class TutorService {
             throw new BusinessException(TutorMessages.TERMO_BUSCA_CURTO);
         }
 
-        return tutorRepository.buscaGlobal(termoLimpo, paginacao).map(tutorMapper::toResponseDTO);
+        return tutorRepository.buscaGlobal(termoLimpo, paginacao)
+                .map(tutorMapper::toResponseDTO);
     }
 
     @Transactional

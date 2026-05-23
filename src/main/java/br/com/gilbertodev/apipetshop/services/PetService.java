@@ -72,7 +72,8 @@ public class PetService {
             throw new BusinessException(PetMessages.TERMO_BUSCA_CURTO);
         }
 
-        return petRepository.buscaGlobal(termoLimpo, paginacao).map(petMapper::toResponseDTO);
+        return petRepository.buscaGlobal(termoLimpo, paginacao)
+                .map(petMapper::toResponseDTO);
     }
 
     @Transactional

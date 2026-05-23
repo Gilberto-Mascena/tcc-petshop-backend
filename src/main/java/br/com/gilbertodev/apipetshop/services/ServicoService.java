@@ -3,9 +3,10 @@ package br.com.gilbertodev.apipetshop.services;
 import br.com.gilbertodev.apipetshop.dtos.servico.ServicoRequestDTO;
 import br.com.gilbertodev.apipetshop.dtos.servico.ServicoResponseDTO;
 import br.com.gilbertodev.apipetshop.entities.Servico;
-import br.com.gilbertodev.apipetshop.messages.ServicoMessages;
+import br.com.gilbertodev.apipetshop.exceptions.BusinessException;
 import br.com.gilbertodev.apipetshop.exceptions.ObjectNotFoundException;
 import br.com.gilbertodev.apipetshop.mapper.ServicoMapper;
+import br.com.gilbertodev.apipetshop.messages.ServicoMessages;
 import br.com.gilbertodev.apipetshop.repositories.ServicoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +42,21 @@ public class ServicoService {
         return servicoRepository.findById(id)
                 .map(servicoMapper::toResponseDTO)
                 .orElseThrow(() -> new ObjectNotFoundException(ServicoMessages.SERVICO_NAO_ENCONTRADO));
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ServicoResponseDTO> buscaGlobal(String termo, Pageable paginacao) {
+        if (termo == null || termo.isBlank()) {
+            return Page.empty(paginacao);
+        }
+
+        String termoLimpo = termo.trim();
+
+        if (termoLimpo.length() < 3) {
+            throw new BusinessException(ServicoMessages.TERMO_BUSCA_CURTO);
+        }
+        return servicoRepository.buscaGlobal(termoLimpo, paginacao)
+                .map(servicoMapper::toResponseDTO);
     }
 
     @Transactional
