@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class UsuarioInicialConfig implements CommandLineRunner {
 
-    private static Logger log = LoggerFactory.getLogger(UsuarioInicialConfig.class);
+    private static final Logger log = LoggerFactory.getLogger(UsuarioInicialConfig.class);
 
     private final UsuarioRepository repository;
     private final PasswordEncoder passwordEncoder;

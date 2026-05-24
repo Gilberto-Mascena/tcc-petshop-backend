@@ -121,7 +121,8 @@ public class AgendamentoController {
                     responseCode = "200",
                     description = "Status atualizado com sucesso"),
             @ApiResponse(
-                    responseCode = "404", description = "Agendamento não encontrado"),
+                    responseCode = "404",
+                    description = "Agendamento não encontrado"),
             @ApiResponse(
                     responseCode = "422",
                     description = "Status inválido ou regra de negócio violada")

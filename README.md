@@ -27,10 +27,10 @@ Acompanhe a evolução detalhada através do **[Quadro Kanban (GitHub Projects)]
 
 - **[✅] Gestão de Tutores e Pets**: Concluído (CRUD e validações base).
 - **[✅] Segurança**: Implementada (JWT + Spring Security).
-- **[➡️] Refatoração (Issue #4)**: Conversão de Classes para Records e ajuste de recursividade (Em progresso).
-- **[ ] Tratamento de Erros (Issue #5)**: Mensagens amigáveis para violação de integridade (Ex: CPF duplicado).
-- **[ ] Testes (Issue #6)**: Implementação de testes de integração com MockMvc.
-- **[ ] Agendamento**: Controle de status e horários de serviços.
+- **[✅] Refatoração (Issue #4)**: Conversão de Classes para Records e ajuste de recursividade (Em progresso).
+- **[✅] Tratamento de Erros (Issue #5)**: Mensagens amigáveis para violação de integridade (Ex: CPF duplicado).
+- **[✅] Testes (Issue #6)**: Implementação de testes de integração com MockMvc.
+- **[✅] Agendamento**: Controle de status e horários de serviços.
 
 ## 📖 Documentação da API (Swagger)
 A API conta com documentação interativa via Swagger/OpenAPI. Com a aplicação rodando, acesse:
