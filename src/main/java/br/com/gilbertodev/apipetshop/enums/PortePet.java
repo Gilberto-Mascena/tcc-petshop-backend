@@ -1,7 +1,9 @@
 package br.com.gilbertodev.apipetshop.enums;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@AllArgsConstructor
 @Getter
 public enum PortePet {
 
@@ -10,8 +12,4 @@ public enum PortePet {
     GRANDE("Grande");
 
     private final String descricao;
-
-    PortePet(String descricao) {
-        this.descricao = descricao;
-    }
 }

@@ -1,7 +1,9 @@
 package br.com.gilbertodev.apipetshop.enums;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@AllArgsConstructor
 @Getter
 public enum StatusAgendamento {
 
@@ -12,8 +14,4 @@ public enum StatusAgendamento {
     REALIZADO("Realizado");
 
     private final String descricao;
-
-    StatusAgendamento(String descricao) {
-        this.descricao = descricao;
-    }
 }

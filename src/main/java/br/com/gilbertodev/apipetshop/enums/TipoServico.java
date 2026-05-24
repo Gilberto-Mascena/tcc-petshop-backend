@@ -1,7 +1,9 @@
 package br.com.gilbertodev.apipetshop.enums;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@AllArgsConstructor
 @Getter
 public enum TipoServico {
 
@@ -12,8 +14,4 @@ public enum TipoServico {
     LIMPEZA_OUVIDO("Limpeza de Ouvido");
 
     private final String descricao;
-
-    TipoServico(String descricao) {
-        this.descricao = descricao;
-    }
 }
