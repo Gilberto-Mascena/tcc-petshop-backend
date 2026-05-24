@@ -48,7 +48,12 @@ public class TutorMapper {
         if (dto.email() != null) tutor.setEmail(dto.email());
         if (dto.celular() != null) tutor.setCelular(dto.celular());
 
-        mapearEndereco(dto.endereco(), tutor.getEndereco());
+        if (dto.endereco() != null) {
+            if (tutor.getEndereco() == null) {
+                tutor.setEndereco(new Endereco());
+            }
+            mapearEndereco(dto.endereco(), tutor.getEndereco());
+        }
     }
 
     private void mapearEndereco(EnderecoRequestDTO dto, Endereco endereco) {
