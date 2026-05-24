@@ -1,15 +1,10 @@
 package br.com.gilbertodev.apipetshop.exceptions;
 
-import br.com.gilbertodev.apipetshop.interfaces.MessageBase;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@AllArgsConstructor
 @Getter
 public class AccessDeniedException extends RuntimeException {
-
     private final String codigo;
-
-    public AccessDeniedException(MessageBase mensagemBase) {
-        super(mensagemBase.getMensagem());
-        this.codigo = mensagemBase.getCodigo();
-    }
 }
