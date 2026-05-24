@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.Instant;
+import java.util.List;
 
 @RestControllerAdvice
 public class ResourceExceptionHandler {
@@ -24,108 +25,168 @@ public class ResourceExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(ResourceExceptionHandler.class);
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<StandardError> handleBusinessException(BusinessException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> handleBusinessException(BusinessException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
-        StandardError err = montarErro(e.getCodigo(), e.getMessage(), status, request);
+        StandardError err = montarErro(
+                ex.getCodigo(),
+                ex.getMessage(),
+                status,
+                request);
+
         return ResponseEntity.status(status).body(err);
     }
 
     @ExceptionHandler(ObjectNotFoundException.class)
-    public ResponseEntity<StandardError> handleObjectNotFoundException(ObjectNotFoundException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> handleObjectNotFoundException(ObjectNotFoundException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
-        StandardError err = montarErro(e.getCodigo(), e.getMessage(), status, request);
+        StandardError err = montarErro(
+                ex.getCodigo(),
+                ex.getMessage(),
+                status,
+                request);
+
         return ResponseEntity.status(status).body(err);
     }
 
     @ExceptionHandler(AuthException.class)
-    public ResponseEntity<StandardError> handleAuthException(AuthException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> handleAuthException(AuthException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
-        StandardError err = montarErro(e.getCodigo(), e.getMessage(), status, request);
+        StandardError err = montarErro(
+                ex.getCodigo(),
+                ex.getMessage(),
+                status,
+                request);
+
         return ResponseEntity.status(status).body(err);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<StandardError> handleAccessDeniedException(AccessDeniedException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> handleAccessDeniedException(AccessDeniedException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.FORBIDDEN;
-        StandardError err = montarErro(e.getCodigo(), e.getMessage(), status, request);
+        StandardError err = montarErro(
+                ex.getCodigo(),
+                ex.getMessage(),
+                status,
+                request);
+
         return ResponseEntity.status(status).body(err);
     }
 
     @ExceptionHandler(AuthenticationErrorException.class)
-    public ResponseEntity<StandardError> handleAuthenticationException(AuthenticationErrorException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> handleAuthenticationException(AuthenticationErrorException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
-        StandardError err = montarErro(e.getCodigo(), e.getMessage(), status, request);
+        StandardError err = montarErro(
+                ex.getCodigo(),
+                ex.getMessage(),
+                status,
+                request);
+
         return ResponseEntity.status(status).body(err);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<StandardError> handleUsernameNotFound(UsernameNotFoundException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> handleUsernameNotFound(UsernameNotFoundException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
-        StandardError err = montarErro(UsuarioMessages.USUARIO_NAO_ENCONTRADO.getCodigo(), UsuarioMessages.USUARIO_NAO_ENCONTRADO.getMensagem(), status, request);
+        StandardError err = montarErro(
+                UsuarioMessages.USUARIO_NAO_ENCONTRADO.getCodigo(),
+                UsuarioMessages.USUARIO_NAO_ENCONTRADO.getMensagem(),
+                status,
+                request);
+
         return ResponseEntity.status(status).body(err);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<StandardError> handleHttpMessageNotReadable(HttpMessageNotReadableException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
-        StandardError err = montarErro("DADOS_INVALIDOS",
+        StandardError err = montarErro(
+                "DADOS_INVALIDOS",
                 "Corpo da requisição vazio ou formato JSON inválido.",
-                status, request);
+                status,
+                request);
+
         return ResponseEntity.status(status).body(err);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<StandardError> handleValidationExceptions(MethodArgumentNotValidException e, HttpServletRequest request) {
-        String mensagem = e.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
+    public ResponseEntity<ValidationErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpServletRequest request) {
+        List<ValidationErrorDetails> erros = ex.getBindingResult().getFieldErrors()
+                .stream()
+                .map(fieldError -> new ValidationErrorDetails(fieldError.getField(), fieldError.getDefaultMessage()))
+                .toList();
         HttpStatus status = HttpStatus.BAD_REQUEST;
-        StandardError err = montarErro("VALIDACAO_FALHA", mensagem, status, request);
+        ValidationErrorResponse err = montarErroValidacao(
+                "VALIDACAO_FALHA",
+                "Erro de validação nos campos da requisição.",
+                status,
+                request,
+                erros);
 
         return ResponseEntity.status(status).body(err);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<StandardError> handleMethodNotSupported(HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.METHOD_NOT_ALLOWED;
-        StandardError err = montarErro("METODO_INVALIDO",
+        StandardError err = montarErro(
+                "METODO_INVALIDO",
                 "Método HTTP não permitido para este endpoint.",
-                status, request);
+                status,
+                request);
+
         return ResponseEntity.status(status).body(err);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<StandardError> handleBadCredentials(BadCredentialsException e, HttpServletRequest request) {
-        log.warn("Tentativa de acesso não autorizada: IP {}, Usuário/Login: {}",
-                request.getRemoteAddr(),
-                request.getParameter("login"));
+    public ResponseEntity<StandardError> handleBadCredentials(BadCredentialsException ex, HttpServletRequest request) {
+        log.warn("Tentativa de login inválida originada do IP: {}", request.getRemoteAddr());
 
         HttpStatus status = HttpStatus.UNAUTHORIZED;
-        StandardError err = montarErro(UsuarioMessages.CREDENCIAIS_INVALIDAS.getCodigo(),
+        StandardError err = montarErro(
+                UsuarioMessages.CREDENCIAIS_INVALIDAS.getCodigo(),
                 UsuarioMessages.CREDENCIAIS_INVALIDAS.getMensagem(),
-                status, request);
+                status,
+                request);
+
         return ResponseEntity.status(status).body(err);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<StandardError> handleDataIntegrityViolation(DataIntegrityViolationException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> handleDataIntegrityViolation(DataIntegrityViolationException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.CONFLICT;
         String mensagem = "Conflito de dados: Este registro já existe no sistema ou não pode ser processado.";
-        StandardError err = montarErro("CONFLITO_DADOS", mensagem, status, request);
+        StandardError err = montarErro(
+                "CONFLITO_DADOS",
+                mensagem,
+                status,
+                request);
+
         return ResponseEntity.status(status).body(err);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<StandardError> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException e, HttpServletRequest request) {
-        String mensagem = "O parâmetro '" + e.getName() + "' deve ser do tipo " + e.getRequiredType().getSimpleName();
+    public ResponseEntity<StandardError> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
+        String mensagem = "O parâmetro '" + ex.getName() + "' deve ser do tipo " + ex.getRequiredType().getSimpleName();
         HttpStatus status = HttpStatus.BAD_REQUEST;
-        StandardError err = montarErro("PARAM_INVALIDO", mensagem, status, request);
+        StandardError err = montarErro(
+                "PARAM_INVALIDO",
+                mensagem,
+                status,
+                request);
+
         return ResponseEntity.status(status).body(err);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<StandardError> handleGenericException(Exception e, HttpServletRequest request) {
-        log.error("Erro inesperado: ", e);
+    public ResponseEntity<StandardError> handleGenericException(Exception ex, HttpServletRequest request) {
+        log.error("Erro inesperado: ", ex);
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        StandardError err = montarErro("ERRO_INTERNO", "Ocorreu um erro interno inesperado. Tente novamente mais tarde.", status, request);
+        StandardError err = montarErro(
+                "ERRO_INTERNO",
+                "Ocorreu um erro interno inesperado. Tente novamente mais tarde.",
+                status,
+                request);
+
         return ResponseEntity.status(status).body(err);
     }
 
@@ -137,6 +198,18 @@ public class ResourceExceptionHandler {
                 "Erro na Requisição",
                 mensagem,
                 request.getRequestURI()
+        );
+    }
+
+    private ValidationErrorResponse montarErroValidacao(String codigo, String mensagem, HttpStatus status, HttpServletRequest request, List<ValidationErrorDetails> erros) {
+        return new ValidationErrorResponse(
+                Instant.now(),
+                status.value(),
+                codigo,
+                "Erro na Requisição",
+                mensagem,
+                request.getRequestURI(),
+                erros
         );
     }
 }
