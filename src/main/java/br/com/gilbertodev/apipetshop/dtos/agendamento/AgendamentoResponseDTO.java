@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record AgendamentoResponseDTO(
+
         Long id,
         LocalDateTime dataHora,
         StatusAgendamento status,

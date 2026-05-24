@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public record AgendamentoRequestDTO(
+
         @NotNull(message = "A data e hora são obrigatórias")
         @Future(message = "O agendamento deve ser para uma data futura")
         LocalDateTime dataHora,

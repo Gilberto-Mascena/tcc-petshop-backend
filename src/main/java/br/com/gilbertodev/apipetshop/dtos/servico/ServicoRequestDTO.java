@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 public record ServicoRequestDTO(
+
         @NotNull(message = "O tipo de serviço é obrigatório")
         TipoServico tipo,
 

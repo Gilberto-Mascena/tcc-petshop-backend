@@ -6,6 +6,7 @@ import br.com.gilbertodev.apipetshop.enums.PortePet;
 import java.time.LocalDate;
 
 public record PetResponseDTO(
+
         Long id,
         String nome,
         String especie,
