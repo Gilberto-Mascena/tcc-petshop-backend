@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -13,10 +15,17 @@ import java.time.LocalDateTime;
 @Repository
 public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> {
 
-    // Otimização: Carrega os relacionamentos em uma única consulta SQL (evita N+1 e LazyInitializationException)
     @EntityGraph(attributePaths = {"pet", "pet.tutor", "servico"})
     Page<Agendamento> findAll(Pageable paginacao);
 
-    // Validação: Checa se já existe um agendamento no mesmo horário que não esteja cancelado
     boolean existsByDataHoraAndStatusNot(LocalDateTime dataHora, StatusAgendamento status);
+
+    @Query("SELECT a FROM Agendamento a JOIN a.pet p JOIN a.servico s WHERE " +
+            "CAST(a.dataHora as string ) LIKE CONCAT('%', :termo, '%') OR " +
+            "LOWER(CAST(a.status as string )) LIKE LOWER(CONCAT('%', :termo, '%')) OR " +
+            "LOWER(p.nome) LIKE LOWER(CONCAT('%', :termo, '%')) OR " +
+            "LOWER(s.tipo) LIKE LOWER(CONCAT('%', :termo, '%')) OR " +
+            "CAST(a.valorTotal as string) LIKE CONCAT('%', :termo, '%') OR " +
+            "LOWER(a.observacoes) LIKE LOWER(CONCAT('%', :termo, '%'))")
+    Page<Agendamento> buscaGlobal(@Param("termo") String termo, Pageable paginacao);
 }

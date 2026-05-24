@@ -6,10 +6,10 @@ import br.com.gilbertodev.apipetshop.entities.Agendamento;
 import br.com.gilbertodev.apipetshop.entities.Pet;
 import br.com.gilbertodev.apipetshop.entities.Servico;
 import br.com.gilbertodev.apipetshop.enums.StatusAgendamento;
-import br.com.gilbertodev.apipetshop.messages.AgendamentoMessages;
 import br.com.gilbertodev.apipetshop.exceptions.BusinessException;
 import br.com.gilbertodev.apipetshop.exceptions.ObjectNotFoundException;
 import br.com.gilbertodev.apipetshop.mapper.AgendamentoMapper;
+import br.com.gilbertodev.apipetshop.messages.AgendamentoMessages;
 import br.com.gilbertodev.apipetshop.repositories.AgendamentoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,6 +59,22 @@ public class AgendamentoService {
                 .orElseThrow(() -> new ObjectNotFoundException(AgendamentoMessages.AGENDAMENTO_NAO_ENCONTRADO));
     }
 
+    @Transactional(readOnly = true)
+    public Page<AgendamentoResponseDTO> buscaGlobal(String termo, Pageable paginacao) {
+        if (termo == null || termo.isBlank()) {
+            return Page.empty(paginacao);
+        }
+
+        String termoLimpo = termo.trim();
+
+        if (termoLimpo.length() < 3) {
+            throw new BusinessException(AgendamentoMessages.TERMO_BUSCA_CURTO);
+        }
+
+        return agendamentoRepository.buscaGlobal(termoLimpo, paginacao)
+                .map(agendamentoMapper::toResponseDTO);
+    }
+
     @Transactional
     public AgendamentoResponseDTO atualizar(Long id, AgendamentoRequestDTO dto) {
         Agendamento agendamento = buscarEntidadePorId(id);
@@ -73,6 +89,8 @@ public class AgendamentoService {
         Servico servico = servicoService.buscarEntidadePorId(dto.servicoId());
 
         agendamentoMapper.atualizarDados(dto, agendamento, pet, servico);
+
+        agendamento.calcularValorFinal();
 
         return agendamentoMapper.toResponseDTO(agendamentoRepository.save(agendamento));
     }

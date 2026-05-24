@@ -1,8 +1,10 @@
 package br.com.gilbertodev.apipetshop.messages;
 
 import br.com.gilbertodev.apipetshop.interfaces.MessageBase;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@AllArgsConstructor
 @Getter
 public enum AgendamentoMessages implements MessageBase {
 
@@ -10,13 +12,9 @@ public enum AgendamentoMessages implements MessageBase {
     HORARIO_PASSADO("AGEND_002", "O horário do agendamento não pode ser no passado."),
     DADOS_INCOMPLETOS_PARA_CALCULO("AGEND_003", "Não é possível calcular o valor: Pet ou Serviço não informados."),
     STATUS_NAO_PODE_SER_ALTERADO("AGEND_004", "O status do agendamento não pode ser alterado para o status atual."),
-    HORARIO_INDISPONIVEL("AGEND_005", "O horário selecionado já está ocupado por outro agendamento.");
+    HORARIO_INDISPONIVEL("AGEND_005", "O horário selecionado já está ocupado por outro agendamento."),
+    TERMO_BUSCA_CURTO("AGEND_006", "O termo de busca deve conter pelo menos 3 caracteres.");
 
     private final String codigo;
     private final String mensagem;
-
-    AgendamentoMessages(String codigo, String mensagem) {
-        this.mensagem = mensagem;
-        this.codigo = codigo;
-    }
 }
