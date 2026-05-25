@@ -28,7 +28,9 @@ public class UsuarioController {
             summary = "Cadastrar usuário",
             description = "Cria um novo usuário com senha criptografada")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso"),
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Usuário criado com sucesso"),
     })
 
     public ResponseEntity<Void> cadastrarUsuario(@Valid @RequestBody CriaUsuarioRequestDTO dto) {
