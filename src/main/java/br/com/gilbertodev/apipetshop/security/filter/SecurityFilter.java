@@ -51,7 +51,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         var usuario = repository.findByLogin(subject);
 
         if (usuario == null) {
-            throw new AuthenticationErrorException(UsuarioMessages.ERRO_AUTENTICACAO);
+            throw new AuthenticationErrorException(UsuarioMessages.ERRO_AUTENTICACAO.getMensagem());
         }
 
         var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());

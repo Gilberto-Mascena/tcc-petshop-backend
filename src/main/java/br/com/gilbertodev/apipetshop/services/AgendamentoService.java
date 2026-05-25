@@ -34,7 +34,7 @@ public class AgendamentoService {
     @Transactional
     public AgendamentoResponseDTO salvar(AgendamentoRequestDTO dto) {
         if (agendamentoRepository.existsByDataHoraAndStatusNot(dto.dataHora(), StatusAgendamento.CANCELADO)) {
-            throw new BusinessException(AgendamentoMessages.HORARIO_INDISPONIVEL);
+            throw new BusinessException(AgendamentoMessages.HORARIO_INDISPONIVEL.getMensagem());
         }
 
         Pet pet = petService.buscarEntidadePorId(dto.petId());
@@ -56,7 +56,7 @@ public class AgendamentoService {
     public AgendamentoResponseDTO buscarPorId(Long id) {
         return agendamentoRepository.findById(id)
                 .map(agendamentoMapper::toResponseDTO)
-                .orElseThrow(() -> new ObjectNotFoundException(AgendamentoMessages.AGENDAMENTO_NAO_ENCONTRADO));
+                .orElseThrow(() -> new ObjectNotFoundException(AgendamentoMessages.AGENDAMENTO_NAO_ENCONTRADO.getMensagem()));
     }
 
     @Transactional(readOnly = true)
@@ -68,7 +68,7 @@ public class AgendamentoService {
         String termoLimpo = termo.trim();
 
         if (termoLimpo.length() < 3) {
-            throw new BusinessException(AgendamentoMessages.TERMO_BUSCA_CURTO);
+            throw new BusinessException(AgendamentoMessages.TERMO_BUSCA_CURTO.getMensagem());
         }
 
         return agendamentoRepository.buscaGlobal(termoLimpo, paginacao)
@@ -81,7 +81,7 @@ public class AgendamentoService {
 
         if (!agendamento.getDataHora().equals(dto.dataHora())) {
             if (agendamentoRepository.existsByDataHoraAndStatusNot(dto.dataHora(), StatusAgendamento.CANCELADO)) {
-                throw new BusinessException(AgendamentoMessages.HORARIO_INDISPONIVEL);
+                throw new BusinessException(AgendamentoMessages.HORARIO_INDISPONIVEL.getMensagem());
             }
         }
 
@@ -100,7 +100,7 @@ public class AgendamentoService {
         Agendamento agendamento = buscarEntidadePorId(id);
 
         if (agendamento.getStatus() == StatusAgendamento.REALIZADO) {
-            throw new BusinessException(AgendamentoMessages.STATUS_NAO_PODE_SER_ALTERADO);
+            throw new BusinessException(AgendamentoMessages.STATUS_NAO_PODE_SER_ALTERADO.getMensagem());
         }
 
         agendamento.setStatus(novoStatus);
@@ -109,6 +109,6 @@ public class AgendamentoService {
 
     public Agendamento buscarEntidadePorId(Long id) {
         return agendamentoRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(AgendamentoMessages.AGENDAMENTO_NAO_ENCONTRADO));
+                .orElseThrow(() -> new ObjectNotFoundException(AgendamentoMessages.AGENDAMENTO_NAO_ENCONTRADO.getMensagem()));
     }
 }

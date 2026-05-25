@@ -36,11 +36,11 @@ public class PetService {
 
         if (petRequestDTO.dataNascimento() != null &&
                 petRequestDTO.dataNascimento().isBefore(LocalDate.now().minusYears(30))) {
-            throw new BusinessException(PetMessages.PET_IDADE_INVALIDA);
+            throw new BusinessException(PetMessages.PET_IDADE_INVALIDA.getMensagem());
         }
 
         Tutor tutor = tutorRepository.findById(petRequestDTO.tutorId())
-                .orElseThrow(() -> new ObjectNotFoundException(TutorMessages.TUTOR_NAO_ENCONTRADO));
+                .orElseThrow(() -> new ObjectNotFoundException(TutorMessages.TUTOR_NAO_ENCONTRADO.getMensagem()));
 
         Pet pet = petMapper.toEntity(petRequestDTO, tutor);
 
@@ -57,7 +57,7 @@ public class PetService {
     public PetResponseDTO buscarPorId(Long id) {
         return petRepository.findById(id)
                 .map(petMapper::toResponseDTO)
-                .orElseThrow(() -> new ObjectNotFoundException(PetMessages.PET_NAO_ENCONTRADO));
+                .orElseThrow(() -> new ObjectNotFoundException(PetMessages.PET_NAO_ENCONTRADO.getMensagem()));
     }
 
     @Transactional(readOnly = true)
@@ -69,7 +69,7 @@ public class PetService {
         String termoLimpo = termo.trim();
 
         if (termoLimpo.length() < 3) {
-            throw new BusinessException(PetMessages.TERMO_BUSCA_CURTO);
+            throw new BusinessException(PetMessages.TERMO_BUSCA_CURTO.getMensagem());
         }
 
         return petRepository.buscaGlobal(termoLimpo, paginacao)
@@ -83,7 +83,7 @@ public class PetService {
 
         if (dto.tutorId() != null && (pet.getTutor() == null || !dto.tutorId().equals(pet.getTutor().getId()))) {
             Tutor novoTutor = tutorRepository.findById(dto.tutorId())
-                    .orElseThrow(() -> new ObjectNotFoundException(TutorMessages.TUTOR_NAO_ENCONTRADO));
+                    .orElseThrow(() -> new ObjectNotFoundException(TutorMessages.TUTOR_NAO_ENCONTRADO.getMensagem()));
             pet.setTutor(novoTutor);
         }
 
@@ -98,6 +98,6 @@ public class PetService {
 
     public Pet buscarEntidadePorId(Long id) {
         return petRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(PetMessages.PET_NAO_ENCONTRADO));
+                .orElseThrow(() -> new ObjectNotFoundException(PetMessages.PET_NAO_ENCONTRADO.getMensagem()));
     }
 }

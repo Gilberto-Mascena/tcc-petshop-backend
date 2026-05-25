@@ -41,7 +41,7 @@ public class ServicoService {
     public ServicoResponseDTO buscarPorId(Long id) {
         return servicoRepository.findById(id)
                 .map(servicoMapper::toResponseDTO)
-                .orElseThrow(() -> new ObjectNotFoundException(ServicoMessages.SERVICO_NAO_ENCONTRADO));
+                .orElseThrow(() -> new ObjectNotFoundException(ServicoMessages.SERVICO_NAO_ENCONTRADO.getMensagem()));
     }
 
     @Transactional(readOnly = true)
@@ -53,7 +53,7 @@ public class ServicoService {
         String termoLimpo = termo.trim();
 
         if (termoLimpo.length() < 3) {
-            throw new BusinessException(ServicoMessages.TERMO_BUSCA_CURTO);
+            throw new BusinessException(ServicoMessages.TERMO_BUSCA_CURTO.getMensagem());
         }
         return servicoRepository.buscaGlobal(termoLimpo, paginacao)
                 .map(servicoMapper::toResponseDTO);
@@ -74,6 +74,6 @@ public class ServicoService {
 
     public Servico buscarEntidadePorId(Long id) {
         return servicoRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(ServicoMessages.SERVICO_NAO_ENCONTRADO));
+                .orElseThrow(() -> new ObjectNotFoundException(ServicoMessages.SERVICO_NAO_ENCONTRADO.getMensagem()));
     }
 }

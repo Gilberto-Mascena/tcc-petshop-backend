@@ -28,7 +28,7 @@ public class TutorService {
     public TutorResponseDTO salvar(TutorRequestDTO tutorRequestDTO) {
 
         if (tutorRepository.existsByCpf(tutorRequestDTO.cpf())) {
-            throw new BusinessException(TutorMessages.CPF_JA_CADASTRADO);
+            throw new BusinessException(TutorMessages.CPF_JA_CADASTRADO.getMensagem());
         }
         Tutor tutor = tutorMapper.toEntity(tutorRequestDTO);
         Tutor tutorSalvo = tutorRepository.save(tutor);
@@ -45,7 +45,7 @@ public class TutorService {
         return tutorRepository.findById(id)
                 .map(tutorMapper::toResponseDTO)
                 .orElseThrow(() -> new ObjectNotFoundException(
-                        TutorMessages.TUTOR_NAO_ENCONTRADO));
+                        TutorMessages.TUTOR_NAO_ENCONTRADO.getMensagem()));
     }
 
     @Transactional(readOnly = true)
@@ -57,7 +57,7 @@ public class TutorService {
         String termoLimpo = termo.trim();
 
         if (termoLimpo.length() < 3) {
-            throw new BusinessException(TutorMessages.TERMO_BUSCA_CURTO);
+            throw new BusinessException(TutorMessages.TERMO_BUSCA_CURTO.getMensagem());
         }
 
         return tutorRepository.buscaGlobal(termoLimpo, paginacao)
@@ -70,7 +70,7 @@ public class TutorService {
 
         if (!dto.cpf().equals(tutor.getCpf())) {
             if (tutorRepository.existsByCpf(dto.cpf())) {
-                throw new BusinessException(TutorMessages.CPF_JA_CADASTRADO);
+                throw new BusinessException(TutorMessages.CPF_JA_CADASTRADO.getMensagem());
             }
         }
         tutorMapper.atualizarDados(dto, tutor);
@@ -86,6 +86,6 @@ public class TutorService {
 
     public Tutor buscarEntidadePorId(Long id) {
         return tutorRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(TutorMessages.TUTOR_NAO_ENCONTRADO));
+                .orElseThrow(() -> new ObjectNotFoundException(TutorMessages.TUTOR_NAO_ENCONTRADO.getMensagem()));
     }
 }

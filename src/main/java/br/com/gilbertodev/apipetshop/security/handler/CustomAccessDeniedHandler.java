@@ -21,7 +21,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException e) {
 
-        var minhaExcecao = new br.com.gilbertodev.apipetshop.exceptions.AccessDeniedException(UsuarioMessages.ERRO_ACESSO_NEGADO);
+        var minhaExcecao = new br.com.gilbertodev.apipetshop.exceptions.AccessDeniedException(UsuarioMessages.ERRO_ACESSO_NEGADO.getMensagem());
         resolver.resolveException(request, response, null, minhaExcecao);
     }
 }
