@@ -1,7 +1,7 @@
 package br.com.gilbertodev.apipetshop.security.filter;
 
-import br.com.gilbertodev.apipetshop.messages.UsuarioMessages;
 import br.com.gilbertodev.apipetshop.exceptions.AuthenticationErrorException;
+import br.com.gilbertodev.apipetshop.messages.UsuarioMessages;
 import br.com.gilbertodev.apipetshop.repositories.UsuarioRepository;
 import br.com.gilbertodev.apipetshop.security.token.TokenService;
 import jakarta.servlet.FilterChain;
@@ -51,7 +51,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         var usuario = repository.findByLogin(subject);
 
         if (usuario == null) {
-            throw new AuthenticationErrorException(UsuarioMessages.ERRO_AUTENTICACAO.getMensagem());
+            throw new AuthenticationErrorException(UsuarioMessages.ERRO_AUTENTICACAO);
         }
 
         var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());

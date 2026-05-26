@@ -1,5 +1,6 @@
 package br.com.gilbertodev.apipetshop.exceptions;
 
+import br.com.gilbertodev.apipetshop.messages.GlobalMessages;
 import br.com.gilbertodev.apipetshop.messages.UsuarioMessages;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -100,8 +101,8 @@ public class ResourceExceptionHandler {
     public ResponseEntity<StandardError> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError err = montarErro(
-                "DADOS_INVALIDOS",
-                "Corpo da requisição vazio ou formato JSON inválido.",
+                GlobalMessages.DADOS_INVALIDOS.getCodigo(),
+                GlobalMessages.DADOS_INVALIDOS.getMensagem(),
                 status,
                 request);
 
@@ -116,8 +117,8 @@ public class ResourceExceptionHandler {
                 .toList();
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ValidationErrorResponse err = montarErroValidacao(
-                "VALIDACAO_FALHA",
-                "Erro de validação nos campos da requisição.",
+                GlobalMessages.VALIDACAO_FALHA.getCodigo(),
+                GlobalMessages.VALIDACAO_FALHA.getMensagem(),
                 status,
                 request,
                 erros);
@@ -129,8 +130,8 @@ public class ResourceExceptionHandler {
     public ResponseEntity<StandardError> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.METHOD_NOT_ALLOWED;
         StandardError err = montarErro(
-                "METODO_INVALIDO",
-                "Método HTTP não permitido para este endpoint.",
+                GlobalMessages.METODO_INVALIDO.getCodigo(),
+                GlobalMessages.METODO_INVALIDO.getMensagem(),
                 status,
                 request);
 
@@ -154,10 +155,9 @@ public class ResourceExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<StandardError> handleDataIntegrityViolation(DataIntegrityViolationException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.CONFLICT;
-        String mensagem = "Conflito de dados: Este registro já existe no sistema ou não pode ser processado.";
         StandardError err = montarErro(
-                "CONFLITO_DADOS",
-                mensagem,
+                GlobalMessages.CONFLITO_DADOS.getCodigo(),
+                GlobalMessages.CONFLITO_DADOS.getMensagem(),
                 status,
                 request);
 
@@ -166,11 +166,23 @@ public class ResourceExceptionHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<StandardError> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
-        String mensagem = "O parâmetro '" + ex.getName() + "' deve ser do tipo " + ex.getRequiredType().getSimpleName();
+        String mensagemDinamica = "O parâmetro '" + ex.getName() + "' deve ser do tipo " + ex.getRequiredType().getSimpleName();
         HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError err = montarErro(
-                "PARAM_INVALIDO",
-                mensagem,
+                GlobalMessages.PARAM_INVALIDO.getCodigo(),
+                mensagemDinamica,
+                status,
+                request);
+
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(TypeMismatchException.class)
+    public ResponseEntity<StandardError> handleTypeMismatch(TypeMismatchException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError err = montarErro(
+                ex.getCodigo(),
+                ex.getMessage(),
                 status,
                 request);
 
@@ -182,8 +194,8 @@ public class ResourceExceptionHandler {
         log.error("Erro inesperado: ", ex);
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         StandardError err = montarErro(
-                "ERRO_INTERNO",
-                "Ocorreu um erro interno inesperado. Tente novamente mais tarde.",
+                GlobalMessages.ERRO_INTERNO.getCodigo(),
+                GlobalMessages.ERRO_INTERNO.getMensagem(),
                 status,
                 request);
 

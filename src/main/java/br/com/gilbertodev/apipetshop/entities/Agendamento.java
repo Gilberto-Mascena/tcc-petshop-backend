@@ -44,7 +44,7 @@ public class Agendamento extends EntidadeBase {
 
     public void calcularValorFinal() {
         if (this.servico == null || this.pet == null) {
-            throw new BusinessException(AgendamentoMessages.DADOS_INCOMPLETOS_PARA_CALCULO.getMensagem());
+            throw new BusinessException(AgendamentoMessages.DADOS_INCOMPLETOS_PARA_CALCULO);
         }
 
         BigDecimal valorBase = this.servico.getValorBase();

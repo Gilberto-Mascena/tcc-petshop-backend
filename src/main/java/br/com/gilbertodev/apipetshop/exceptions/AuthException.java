@@ -1,10 +1,15 @@
 package br.com.gilbertodev.apipetshop.exceptions;
 
-import lombok.AllArgsConstructor;
+import br.com.gilbertodev.apipetshop.interfaces.MessageBase;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
 public class AuthException extends RuntimeException {
+
     private final String codigo;
+
+    public AuthException(MessageBase messageBase) {
+        super(messageBase.getMensagem());
+        this.codigo = messageBase.getCodigo();
+    }
 }
