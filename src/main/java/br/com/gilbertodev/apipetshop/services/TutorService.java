@@ -37,7 +37,8 @@ public class TutorService {
 
     @Transactional(readOnly = true)
     public Page<TutorResponseDTO> listarTodos(Pageable paginacao) {
-        return tutorRepository.findAll(paginacao).map(tutorMapper::toResponseDTO);
+        return tutorRepository.findAll(paginacao)
+                .map(tutorMapper::toResponseDTO);
     }
 
     @Transactional(readOnly = true)

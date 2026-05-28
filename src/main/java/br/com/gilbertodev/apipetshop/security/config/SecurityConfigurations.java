@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
@@ -19,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfigurations {
 
     private final SecurityFilter securityFilter;
@@ -42,8 +44,8 @@ public class SecurityConfigurations {
 
     private void configureAuthorization(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry req) {
         req.requestMatchers(HttpMethod.POST, "/auth/login").permitAll();
-        req.requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll();
         req.requestMatchers(HttpMethod.GET, "/api/servicos").permitAll();
+        req.requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll();
         req.anyRequest().authenticated();
     }
 

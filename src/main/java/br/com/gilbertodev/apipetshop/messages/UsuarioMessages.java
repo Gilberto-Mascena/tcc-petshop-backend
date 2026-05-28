@@ -11,7 +11,9 @@ public enum UsuarioMessages implements MessageBase {
     USUARIO_NAO_ENCONTRADO("USUARIO_001", "Login ou senha inválidos."),
     ERRO_ACESSO_NEGADO("USUARIO_002", "Acesso negado, você não tem permissão para acessar este recurso."),
     ERRO_AUTENTICACAO("USUARIO_003", "Erro de autenticação."),
-    CREDENCIAIS_INVALIDAS("USUARIO_004", "Login ou senha inválidos.");
+    CREDENCIAIS_INVALIDAS("USUARIO_004", "Login ou senha inválidos."),
+    LOGIN_JA_CADASTRADO("USUARIO_005", "Este nome de usuário já está sendo utilizado."),
+    TERMO_BUSCA_CURTO("USUARIO_006", "O termo de busca deve conter pelo menos 3 caracteres.");
 
     private final String codigo;
     private final String mensagem;

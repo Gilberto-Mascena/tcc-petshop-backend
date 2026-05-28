@@ -11,7 +11,8 @@ public enum GlobalMessages implements MessageBase {
     METODO_INVALIDO("GLOB_003", "Método HTTP não permitido para este endpoint."),
     CONFLITO_DADOS("GLOB_004", "Conflito de dados: Este registro já existe no sistema ou não pode ser processado."),
     PARAM_INVALIDO("GLOB_005", "O parâmetro informado possui um tipo ou formato inválido."),
-    ERRO_INTERNO("GLOB_006", "Ocorreu um erro interno inesperado. Tente novamente mais tarde.");
+    ERRO_INTERNO("GLOB_006", "Ocorreu um erro interno inesperado. Tente novamente mais tarde."),
+    ACESSO_NEGADO("GLOB_007", "Acesso negado: Você não tem permissão para acessar este recurso."),;
 
     private final String codigo;
     private final String mensagem;

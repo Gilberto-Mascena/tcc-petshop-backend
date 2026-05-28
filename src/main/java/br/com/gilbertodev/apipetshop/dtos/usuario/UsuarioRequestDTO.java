@@ -3,10 +3,10 @@ package br.com.gilbertodev.apipetshop.dtos.usuario;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record CriaUsuarioRequestDTO(
+public record UsuarioRequestDTO(
 
         @NotBlank(message = "O login é obrigatório")
-        @Size(min = 4, max = 20, message = "O login deve ter entre 4 e 20 caracteres")
+        @Size(min = 4, max = 30, message = "O login deve ter entre 4 e 30 caracteres")
         String login,
 
         @NotBlank(message = "A senha é obrigatória")
