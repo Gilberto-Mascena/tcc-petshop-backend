@@ -1,10 +1,8 @@
 package br.com.gilbertodev.apipetshop.messages;
 
 import br.com.gilbertodev.apipetshop.interfaces.MessageBase;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
 public enum PetMessages implements MessageBase {
 
@@ -16,4 +14,9 @@ public enum PetMessages implements MessageBase {
 
     private final String codigo;
     private final String mensagem;
+
+    PetMessages(String codigo, String mensagem) {
+        this.codigo = codigo;
+        this.mensagem = mensagem;
+    }
 }
