@@ -1,7 +1,7 @@
 package br.com.gilbertodev.apipetshop.doc;
 
-import br.com.gilbertodev.apipetshop.dtos.autenticacao.DadosAutenticacao;
-import br.com.gilbertodev.apipetshop.dtos.autenticacao.DadosTokenJWT;
+import br.com.gilbertodev.apipetshop.dtos.autenticacao.UsuarioLoginRequestDTO;
+import br.com.gilbertodev.apipetshop.dtos.autenticacao.UsuarioTokenResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Tag(
         name = "Autenticação",
         description = "Endpoints para autenticação de usuários")
-public interface AutenticacaoControllerDoc {
+public interface UsuarioAuthControllerDoc {
 
     @Operation(
             summary = "Realiza login",
@@ -26,5 +26,5 @@ public interface AutenticacaoControllerDoc {
                     responseCode = "401",
                     description = "Credenciais inválidas")
     })
-    ResponseEntity<DadosTokenJWT> efetuarLogin(@RequestBody @Valid DadosAutenticacao dados);
+    ResponseEntity<UsuarioTokenResponseDTO> efetuarLogin(@RequestBody @Valid UsuarioLoginRequestDTO dados);
 }

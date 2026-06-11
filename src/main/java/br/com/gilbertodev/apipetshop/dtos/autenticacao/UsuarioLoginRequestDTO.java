@@ -2,7 +2,7 @@ package br.com.gilbertodev.apipetshop.dtos.autenticacao;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record DadosAutenticacao(
+public record UsuarioLoginRequestDTO(
 
         @NotBlank(message = "O login é obrigatório")
         String login,
