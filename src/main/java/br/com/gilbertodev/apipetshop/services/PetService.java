@@ -55,9 +55,8 @@ public class PetService {
 
     @Transactional(readOnly = true)
     public PetResponseDTO buscarPorId(Long id) {
-        return petRepository.findById(id)
-                .map(petMapper::toResponseDTO)
-                .orElseThrow(() -> new ObjectNotFoundException(PetMessages.PET_NAO_ENCONTRADO));
+        Pet pet = buscarEntidadePorId(id);
+        return petMapper.toResponseDTO(pet);
     }
 
     @Transactional(readOnly = true)
