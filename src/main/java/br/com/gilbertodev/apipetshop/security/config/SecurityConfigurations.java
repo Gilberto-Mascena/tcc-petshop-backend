@@ -44,6 +44,7 @@ public class SecurityConfigurations {
 
     private void configureAuthorization(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry req) {
         req.requestMatchers(HttpMethod.POST, "/auth/login").permitAll();
+        req.requestMatchers(HttpMethod.POST, "/api/usuarios/cadastro").permitAll();
         req.requestMatchers(HttpMethod.GET, "/api/servicos").permitAll();
         req.requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll();
         req.anyRequest().authenticated();
