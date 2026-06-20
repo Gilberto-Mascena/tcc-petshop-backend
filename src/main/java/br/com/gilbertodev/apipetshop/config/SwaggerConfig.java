@@ -13,12 +13,18 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("API Pet Shop - Sistema de Gerenciamento")
+                        .title("API de Gerenciamento de Pet Shop")
                         .version("1.0")
-                        .description("API para controle de pets, clientes e agendamentos de banho e tosa.")
+                        .description("""
+                                ### Sistema de Controle de Fluxo e Atendimentos
+                                API desenvolvida para o gerenciamento completo de um pet shop, abrangendo:
+                                
+                                * **Funcionários:** Gestão de usuários e permissões de acesso.
+                                * **Tutores & Pets:** Cadastro unificado de clientes e seus respectivos animais.
+                                * **Agendamentos:** Controle dinâmico e marcação de serviços (banho, tosa, etc.).
+                                """)
                         .contact(new Contact()
                                 .name("Gilberto | Dev")
-                                .email("gilbertomascena@gmail.com")
-                                .url("https://github.com/Gilberto-Mascena")));
+                                .email("gilbertomascena@gmail.com")));
     }
 }
