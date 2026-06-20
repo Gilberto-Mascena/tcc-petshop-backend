@@ -1,6 +1,6 @@
 package br.com.gilbertodev.apipetshop.controllers;
 
-import br.com.gilbertodev.apipetshop.doc.UsuarioControllerDoc;
+import br.com.gilbertodev.apipetshop.doc.FuncionarioControllerDoc;
 import br.com.gilbertodev.apipetshop.dtos.usuario.UsuarioRequestDTO;
 import br.com.gilbertodev.apipetshop.dtos.usuario.UsuarioResponseDTO;
 import br.com.gilbertodev.apipetshop.services.UsuarioService;
@@ -17,11 +17,11 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/api/usuarios")
-public class UsuarioController implements UsuarioControllerDoc {
+public class FuncionarioController implements FuncionarioControllerDoc {
 
     private final UsuarioService usuarioService;
 
-    public UsuarioController(UsuarioService usuarioService) {
+    public FuncionarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
 

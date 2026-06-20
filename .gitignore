@@ -39,5 +39,4 @@ build/
 .env
 
 ### PostgreSQL ###
-/postgres_data/
-/postgres_data_tcc-petshop-backend/
+**/postgres_data_tcc-petshop-backend/
