@@ -1,7 +1,10 @@
 package br.com.gilbertodev.apipetshop.dtos.usuario;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+
+import java.util.Set;
 
 public record UsuarioRequestDTO(
 
@@ -11,6 +14,9 @@ public record UsuarioRequestDTO(
 
         @NotBlank(message = "A senha é obrigatória")
         @Size(min = 8, message = "A senha deve ter no mínimo 8 caracteres")
-        String password
+        String password,
+
+        @NotEmpty(message = "O usuário deve possuir pelo menos uma permissão (Role).")
+        Set<String> roleNames
 ) {
 }
