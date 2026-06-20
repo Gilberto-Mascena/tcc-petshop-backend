@@ -22,64 +22,45 @@ public interface ServicoControllerDoc {
     @Operation(
             summary = "Criar um novo serviço",
             description = "Cria um novo serviço com as informações fornecidas no corpo da requisição.")
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "201",
-                    description = "Serviço criado com sucesso"),
-            @ApiResponse(
-                    responseCode = "422",
-                    description = "Dados inválidos, verifique as informações fornecidas")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Serviço criado com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados inválidos, verifique as informações fornecidas")
     })
     ResponseEntity<ServicoResponseDTO> salvar(@Valid @RequestBody ServicoRequestDTO dto);
 
     @Operation(
             summary = "Listar todos os serviços",
             description = "Retorna uma lista paginada de todos os serviços cadastrados.")
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Lista de serviços retornada com sucesso"),
-            @ApiResponse(
-                    responseCode = "204",
-                    description = "Nenhum serviço encontrado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de serviços retornada com sucesso"),
+            @ApiResponse(responseCode = "204", description = "Nenhum serviço encontrado")
     })
     ResponseEntity<Page<ServicoResponseDTO>> listarTodos(Pageable paginacao);
 
     @Operation(
             summary = "Buscar serviço por ID",
             description = "Retorna os detalhes de um serviço específico com base no ID fornecido.")
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Serviço encontrado e retornado com sucesso"),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Serviço não encontrado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Serviço encontrado e retornado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Serviço não encontrado")
     })
     ResponseEntity<ServicoResponseDTO> buscarPorId(@PathVariable Long id);
 
     @Operation(
             summary = "Busca global de serviços",
             description = "Realiza uma busca global por serviços com base em um termo de pesquisa, retornando resultados paginados.")
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Busca realizada com sucesso, resultados retornados"),
-            @ApiResponse(
-                    responseCode = "422",
-                    description = "Termo de busca inválido, deve conter pelo menos 3 caracteres")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso, resultados retornados"),
+            @ApiResponse(responseCode = "422", description = "Termo de busca inválido, deve conter pelo menos 3 caracteres")
     })
     ResponseEntity<Page<ServicoResponseDTO>> buscaGlobal(@RequestParam(required = false) String termo, Pageable paginacao);
 
     @Operation(
             summary = "Atualizar serviço",
             description = "Atualiza as informações de um serviço existente com base no ID fornecido e nos dados fornecidos no corpo da requisição.")
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Serviço atualizado com sucesso"),
-            @ApiResponse(
-                    responseCode = "404",
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Serviço atualizado com sucesso"),
+            @ApiResponse(responseCode = "404",
                     description = "Serviço não encontrado")
     })
     ResponseEntity<ServicoResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody ServicoRequestDTO dto);
@@ -87,13 +68,9 @@ public interface ServicoControllerDoc {
     @Operation(
             summary = "Deletar serviço",
             description = "Remove um serviço do sistema com base no ID fornecido.")
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "204",
-                    description = "Serviço deletado com sucesso"),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Serviço não encontrado para deleção")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Serviço deletado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Serviço não encontrado para deleção")
     })
     ResponseEntity<Void> deletar(@PathVariable Long id);
 }

@@ -18,13 +18,9 @@ public interface UsuarioAuthControllerDoc {
     @Operation(
             summary = "Realiza login",
             description = "Autentica usuário e retorna token JWT")
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Login bem sucedido"),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Credenciais inválidas")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Login bem sucedido"),
+            @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
     })
     ResponseEntity<UsuarioTokenResponseDTO> efetuarLogin(@RequestBody @Valid UsuarioLoginRequestDTO dados);
 }
