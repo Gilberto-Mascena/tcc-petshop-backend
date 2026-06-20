@@ -1,10 +1,10 @@
-package br.com.gilbertodev.apipetshop.security.controller;
+package br.com.gilbertodev.apipetshop.controllers;
 
 import br.com.gilbertodev.apipetshop.doc.UsuarioAuthControllerDoc;
-import br.com.gilbertodev.apipetshop.dtos.autenticacao.UsuarioLoginRequestDTO;
-import br.com.gilbertodev.apipetshop.dtos.autenticacao.UsuarioTokenResponseDTO;
+import br.com.gilbertodev.apipetshop.dtos.auth.UsuarioLoginRequestDTO;
+import br.com.gilbertodev.apipetshop.dtos.auth.UsuarioTokenResponseDTO;
 import br.com.gilbertodev.apipetshop.entities.Usuario;
-import br.com.gilbertodev.apipetshop.security.token.TokenService;
+import br.com.gilbertodev.apipetshop.infra.security.token.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

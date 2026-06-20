@@ -1,4 +1,4 @@
-package br.com.gilbertodev.apipetshop.security.handler;
+package br.com.gilbertodev.apipetshop.infra.security.handler;
 
 import br.com.gilbertodev.apipetshop.messages.UsuarioMessages;
 import jakarta.servlet.http.HttpServletRequest;

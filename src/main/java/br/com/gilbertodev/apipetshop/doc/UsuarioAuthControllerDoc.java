@@ -1,7 +1,7 @@
 package br.com.gilbertodev.apipetshop.doc;
 
-import br.com.gilbertodev.apipetshop.dtos.autenticacao.UsuarioLoginRequestDTO;
-import br.com.gilbertodev.apipetshop.dtos.autenticacao.UsuarioTokenResponseDTO;
+import br.com.gilbertodev.apipetshop.dtos.auth.UsuarioLoginRequestDTO;
+import br.com.gilbertodev.apipetshop.dtos.auth.UsuarioTokenResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

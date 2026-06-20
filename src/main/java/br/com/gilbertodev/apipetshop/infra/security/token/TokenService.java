@@ -1,4 +1,4 @@
-package br.com.gilbertodev.apipetshop.security.token;
+package br.com.gilbertodev.apipetshop.infra.security.token;
 
 import br.com.gilbertodev.apipetshop.entities.Usuario;
 import com.auth0.jwt.JWT;

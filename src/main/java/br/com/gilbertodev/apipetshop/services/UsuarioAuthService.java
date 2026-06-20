@@ -1,4 +1,4 @@
-package br.com.gilbertodev.apipetshop.security.service;
+package br.com.gilbertodev.apipetshop.services;
 
 import br.com.gilbertodev.apipetshop.messages.UsuarioMessages;
 import br.com.gilbertodev.apipetshop.repositories.UsuarioRepository;

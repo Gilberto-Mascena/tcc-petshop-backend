@@ -1,9 +1,10 @@
 package br.com.gilbertodev.apipetshop.security.filter;
 
 import br.com.gilbertodev.apipetshop.exceptions.AuthenticationErrorException;
+import br.com.gilbertodev.apipetshop.infra.security.token.TokenService;
 import br.com.gilbertodev.apipetshop.messages.UsuarioMessages;
 import br.com.gilbertodev.apipetshop.repositories.UsuarioRepository;
-import br.com.gilbertodev.apipetshop.security.token.TokenService;
+import br.com.gilbertodev.apipetshop.services.UsuarioAuthService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

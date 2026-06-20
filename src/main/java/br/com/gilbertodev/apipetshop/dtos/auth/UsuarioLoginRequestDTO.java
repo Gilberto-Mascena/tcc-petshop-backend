@@ -1,4 +1,4 @@
-package br.com.gilbertodev.apipetshop.dtos.autenticacao;
+package br.com.gilbertodev.apipetshop.dtos.auth;
 
 import jakarta.validation.constraints.NotBlank;
 

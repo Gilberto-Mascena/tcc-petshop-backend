@@ -1,4 +1,4 @@
-package br.com.gilbertodev.apipetshop.config;
+package br.com.gilbertodev.apipetshop.infra.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

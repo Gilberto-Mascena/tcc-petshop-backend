@@ -1,4 +1,4 @@
-package br.com.gilbertodev.apipetshop.config;
+package br.com.gilbertodev.apipetshop.infra.config;
 
 import br.com.gilbertodev.apipetshop.entities.Role;
 import br.com.gilbertodev.apipetshop.entities.Usuario;
