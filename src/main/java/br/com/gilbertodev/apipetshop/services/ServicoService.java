@@ -39,9 +39,8 @@ public class ServicoService {
 
     @Transactional(readOnly = true)
     public ServicoResponseDTO buscarPorId(Long id) {
-        return servicoRepository.findById(id)
-                .map(servicoMapper::toResponseDTO)
-                .orElseThrow(() -> new ObjectNotFoundException(ServicoMessages.SERVICO_NAO_ENCONTRADO));
+        Servico servico = buscarEntidadePorId(id);
+        return servicoMapper.toResponseDTO(servico);
     }
 
     @Transactional(readOnly = true)
