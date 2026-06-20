@@ -43,9 +43,8 @@ public class TutorService {
 
     @Transactional(readOnly = true)
     public TutorResponseDTO buscarPorId(Long id) {
-        return tutorRepository.findById(id)
-                .map(tutorMapper::toResponseDTO)
-                .orElseThrow(() -> new ObjectNotFoundException(TutorMessages.TUTOR_NAO_ENCONTRADO));
+        Tutor tutor = buscarEntidadePorId(id);
+        return tutorMapper.toResponseDTO(tutor);
     }
 
     @Transactional(readOnly = true)
