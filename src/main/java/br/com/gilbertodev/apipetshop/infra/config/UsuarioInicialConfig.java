@@ -35,6 +35,7 @@ public class UsuarioInicialConfig implements CommandLineRunner {
             roleRepository.save(new Role("ROLE_ADMIN"));
             roleRepository.save(new Role("ROLE_GERENTE"));
             roleRepository.save(new Role("ROLE_ATENDENTE"));
+            roleRepository.save(new Role("ROLE_CLIENTE"));
 
             log.info(">>> [SEED] Roles iniciais criadas com sucesso!");
         }
