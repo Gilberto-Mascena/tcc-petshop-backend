@@ -5,9 +5,7 @@ import br.com.gilbertodev.apipetshop.dtos.usuario.UsuarioResponseDTO;
 import br.com.gilbertodev.apipetshop.entities.Role;
 import br.com.gilbertodev.apipetshop.entities.Usuario;
 import br.com.gilbertodev.apipetshop.exceptions.BusinessException;
-import br.com.gilbertodev.apipetshop.exceptions.ResourceNotFoundException;
 import br.com.gilbertodev.apipetshop.mapper.UsuarioMapper;
-import br.com.gilbertodev.apipetshop.messages.ResourceMessages;
 import br.com.gilbertodev.apipetshop.messages.UsuarioMessages;
 import br.com.gilbertodev.apipetshop.repositories.RoleRepository;
 import br.com.gilbertodev.apipetshop.repositories.UsuarioRepository;
@@ -17,66 +15,89 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Service
 public class UsuarioService {
 
-    private final UsuarioRepository userRepository;
+    private final UsuarioRepository usuarioRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final UsuarioMapper usuarioMapper;
 
-    public UsuarioService(UsuarioRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, UsuarioMapper usuarioMapper) {
-        this.userRepository = userRepository;
+    public UsuarioService(UsuarioRepository usuarioRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, UsuarioMapper usuarioMapper) {
+        this.usuarioRepository = usuarioRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.usuarioMapper = usuarioMapper;
     }
 
     @Transactional
-    public UsuarioResponseDTO salvar(UsuarioRequestDTO dto) {
-        if (userRepository.existsByLogin(dto.login())) {
+    public UsuarioResponseDTO cadastrarCliente(UsuarioRequestDTO dto) {
+        if (usuarioRepository.existsByLogin(dto.login())) {
             throw new BusinessException(UsuarioMessages.LOGIN_JA_CADASTRADO);
         }
 
-        Usuario novoUsuario = usuarioMapper.toEntity(dto);
-        novoUsuario.setSenha(passwordEncoder.encode(dto.password()));
+        Set<Role> roles = new HashSet<>();
+        Role rolePadrao = roleRepository.findByNome("ROLE_CLIENTE")
+                .orElseThrow(() -> new BusinessException(UsuarioMessages.ROLE_NAO_ENCONTRADA));
+        roles.add(rolePadrao);
 
-        Role rolePadrao = roleRepository.findByNome("ROLE_ATENDENTE")
-                .orElseThrow(() -> new ResourceNotFoundException(ResourceMessages.ROLE_PADRAO_NAO_ENCONTRADA));
-        novoUsuario.getRoles().add(rolePadrao);
+        Usuario usuario = usuarioMapper.toEntity(dto);
+        usuario.setLogin(dto.login());
+        usuario.setSenha(passwordEncoder.encode(dto.password()));
+        usuario.setRoles(roles);
 
-        userRepository.save(novoUsuario);
+        usuario = usuarioRepository.save(usuario);
+        return usuarioMapper.toResponseDTO(usuario);
+    }
 
-        return usuarioMapper.toResponseDTO(novoUsuario);
+    @Transactional
+    public UsuarioResponseDTO salvar(UsuarioRequestDTO dto) {
+        if (usuarioRepository.existsByLogin(dto.login())) {
+            throw new BusinessException(UsuarioMessages.LOGIN_JA_CADASTRADO);
+        }
+
+        Set<Role> roles = new HashSet<>();
+        for (String roleName : dto.roleNames()) {
+            Role role = roleRepository.findByNome(roleName)
+                    .orElseThrow(() -> new BusinessException(UsuarioMessages.ROLE_NAO_ENCONTRADA));
+            roles.add(role);
+        }
+        Usuario usuario = usuarioMapper.toEntity(dto);
+        usuario.setLogin(dto.login());
+        usuario.setSenha(passwordEncoder.encode(dto.password()));
+        usuario.setRoles(roles);
+
+        usuario = usuarioRepository.save(usuario);
+        return usuarioMapper.toResponseDTO(usuario);
     }
 
     @Transactional(readOnly = true)
     public Page<UsuarioResponseDTO> listarTodos(Pageable pageable) {
-        return userRepository.findAll(pageable)
+        return usuarioRepository.findAll(pageable)
                 .map(usuarioMapper::toResponseDTO);
     }
 
     @Transactional(readOnly = true)
     public UsuarioResponseDTO buscarPorId(Long id) {
-        return userRepository.findById(id)
-                .map(usuarioMapper::toResponseDTO)
-                .orElseThrow(() -> new BusinessException(UsuarioMessages.USUARIO_NAO_ENCONTRADO));
+        Usuario usuario = buscarEntidadePorId(id);
+        return usuarioMapper.toResponseDTO(usuario);
     }
 
     @Transactional(readOnly = true)
     public Page<UsuarioResponseDTO> buscaGlobal(String termo, Pageable pageable) {
-
         if (termo == null || termo.isBlank()) {
             return Page.empty(pageable);
         }
 
         String termoLimpo = termo.trim();
-
         if (termoLimpo.length() < 3) {
             throw new BusinessException(UsuarioMessages.TERMO_BUSCA_CURTO);
         }
 
-        return userRepository.buscaGlobal(termoLimpo, pageable)
+        return usuarioRepository.buscaGlobal(termoLimpo, pageable)
                 .map(usuarioMapper::toResponseDTO);
     }
 
@@ -85,25 +106,37 @@ public class UsuarioService {
         Usuario usuario = buscarEntidadePorId(id);
 
         if (!dto.login().equals(usuario.getLogin())) {
-            if (userRepository.existsByLogin(dto.login())) {
+            if (usuarioRepository.existsByLogin(dto.login())) {
                 throw new BusinessException(UsuarioMessages.LOGIN_JA_CADASTRADO);
             }
         }
 
         usuarioMapper.atualizarDados(dto, usuario);
-        Usuario usuarioSalvo = userRepository.save(usuario);
 
+        if (dto.password() != null && !dto.password().isBlank()) {
+            usuario.setSenha(passwordEncoder.encode(dto.password()));
+        }
+
+        Set<Role> roles = new HashSet<>();
+        for (String roleName : dto.roleNames()) {
+            Role role = roleRepository.findByNome(roleName)
+                    .orElseThrow(() -> new BusinessException(UsuarioMessages.ROLE_NAO_ENCONTRADA));
+            roles.add(role);
+        }
+        usuario.setRoles(roles);
+
+        Usuario usuarioSalvo = usuarioRepository.save(usuario);
         return usuarioMapper.toResponseDTO(usuarioSalvo);
     }
 
     @Transactional
     public void deletar(Long id) {
         Usuario usuario = buscarEntidadePorId(id);
-        userRepository.delete(usuario);
+        usuarioRepository.delete(usuario);
     }
 
     public Usuario buscarEntidadePorId(Long id) {
-        return userRepository.findById(id)
+        return usuarioRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(UsuarioMessages.USUARIO_NAO_ENCONTRADO));
     }
 }
