@@ -54,9 +54,8 @@ public class AgendamentoService {
 
     @Transactional(readOnly = true)
     public AgendamentoResponseDTO buscarPorId(Long id) {
-        return agendamentoRepository.findById(id)
-                .map(agendamentoMapper::toResponseDTO)
-                .orElseThrow(() -> new ObjectNotFoundException(AgendamentoMessages.AGENDAMENTO_NAO_ENCONTRADO));
+        Agendamento agendamento = buscarEntidadePorId(id);
+        return agendamentoMapper.toResponseDTO(agendamento);
     }
 
     @Transactional(readOnly = true)
