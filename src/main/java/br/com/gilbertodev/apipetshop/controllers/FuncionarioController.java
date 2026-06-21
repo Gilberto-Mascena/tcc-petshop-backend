@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -26,6 +27,7 @@ public class FuncionarioController implements FuncionarioControllerDoc {
 
     @Override
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<FuncionarioResponseDTO> salvar(@RequestBody @Valid FuncionarioRequestDTO dto) {
         FuncionarioResponseDTO response = funcionarioService.salvar(dto);
         URI uri = ServletUriComponentsBuilder
@@ -38,6 +40,7 @@ public class FuncionarioController implements FuncionarioControllerDoc {
 
     @Override
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'GERENTE')")
     public ResponseEntity<Page<FuncionarioResponseDTO>> listarTodos(@PageableDefault(size = 10, sort = "nome") Pageable paginacao) {
         Page<FuncionarioResponseDTO> pagina = funcionarioService.listarTodos(paginacao);
         return ResponseEntity.ok(pagina);
@@ -45,6 +48,7 @@ public class FuncionarioController implements FuncionarioControllerDoc {
 
     @Override
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GERENTE')")
     public ResponseEntity<FuncionarioResponseDTO> buscarPorId(@PathVariable Long id) {
         FuncionarioResponseDTO response = funcionarioService.buscarPorId(id);
         return ResponseEntity.ok(response);
@@ -52,6 +56,7 @@ public class FuncionarioController implements FuncionarioControllerDoc {
 
     @Override
     @GetMapping("/buscar")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GERENTE')")
     public ResponseEntity<Page<FuncionarioResponseDTO>> buscaGlobal(@RequestParam String termo, @PageableDefault(size = 10, sort = "nome") Pageable paginacao) {
         Page<FuncionarioResponseDTO> pagina = funcionarioService.buscaGlobal(termo, paginacao);
         return ResponseEntity.ok(pagina);
@@ -59,6 +64,7 @@ public class FuncionarioController implements FuncionarioControllerDoc {
 
     @Override
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GERENTE')")
     public ResponseEntity<FuncionarioResponseDTO> atualizar(@PathVariable Long id, @RequestBody @Valid FuncionarioRequestDTO dto) {
         FuncionarioResponseDTO response = funcionarioService.atualizar(id, dto);
         return ResponseEntity.ok(response);
@@ -66,6 +72,7 @@ public class FuncionarioController implements FuncionarioControllerDoc {
 
     @Override
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         funcionarioService.deletar(id);
         return ResponseEntity.noContent().build();
