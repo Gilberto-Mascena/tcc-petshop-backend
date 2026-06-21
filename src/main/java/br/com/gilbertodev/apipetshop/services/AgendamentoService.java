@@ -106,6 +106,12 @@ public class AgendamentoService {
         return agendamentoMapper.toResponseDTO(agendamentoRepository.save(agendamento));
     }
 
+    @Transactional
+    public void deletar(Long id) {
+        Agendamento agendamento = buscarEntidadePorId(id);
+        agendamentoRepository.delete(agendamento);
+    }
+
     public Agendamento buscarEntidadePorId(Long id) {
         return agendamentoRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(AgendamentoMessages.AGENDAMENTO_NAO_ENCONTRADO));
