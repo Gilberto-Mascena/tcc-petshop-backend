@@ -73,4 +73,13 @@ public interface AgendamentoControllerDoc {
             @ApiResponse(responseCode = "422", description = "Status inválido ou regra de negócio violada")
     })
     ResponseEntity<AgendamentoResponseDTO> atualizarStatus(@PathVariable Long id, @RequestParam StatusAgendamento novoStatus);
+
+    @Operation(
+            summary = "Deleta um agendamento",
+            description = "Exclui um agendamento específico com base no ID fornecido. Se o agendamento existir, ele será removido do sistema e uma resposta de sucesso será retornada; caso contrário, uma resposta de erro será gerada.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Agendamento deletado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Agendamento não encontrado")
+    })
+    ResponseEntity<Void> deletar(@PathVariable Long id);
 }
