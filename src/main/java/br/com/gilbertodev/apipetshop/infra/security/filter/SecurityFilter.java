@@ -1,10 +1,7 @@
-package br.com.gilbertodev.apipetshop.security.filter;
+package br.com.gilbertodev.apipetshop.infra.security.filter;
 
-import br.com.gilbertodev.apipetshop.exceptions.AuthenticationErrorException;
 import br.com.gilbertodev.apipetshop.infra.security.token.TokenService;
-import br.com.gilbertodev.apipetshop.messages.UsuarioMessages;
 import br.com.gilbertodev.apipetshop.repositories.UsuarioRepository;
-import br.com.gilbertodev.apipetshop.services.UsuarioAuthService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,16 +45,19 @@ public class SecurityFilter extends OncePerRequestFilter {
     }
 
     private void autenticarUsuario(String tokenJWT) {
-        var subject = tokenService.getSubject(tokenJWT);
-        var usuario = repository.findByLogin(subject);
+        try {
+            var subject = tokenService.getSubject(tokenJWT);
+            var usuario = repository.findByLogin(subject);
 
-        if (usuario == null) {
-            throw new AuthenticationErrorException(UsuarioMessages.ERRO_AUTENTICACAO);
+            if (usuario != null) {
+                var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (Exception e) {
+            logger.warn("Tentativa de autenticação com token inválido ou expirado.");
         }
-
-        var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
+
 
     private String recuperarToken(HttpServletRequest request) {
         var authorizationHeader = request.getHeader("Authorization");
