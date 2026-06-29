@@ -1,6 +1,6 @@
 package br.com.gilbertodev.apipetshop.doc;
 
-import br.com.gilbertodev.apipetshop.dtos.usuario.UsuarioRequestDTO;
+import br.com.gilbertodev.apipetshop.dtos.usuario.UsuarioCadastroRequestDTO;
 import br.com.gilbertodev.apipetshop.dtos.usuario.UsuarioResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -18,5 +18,5 @@ public interface UsuarioCadastroControllerDoc {
             @ApiResponse(responseCode = "201", description = "Cliente cadastrado com sucesso"),
             @ApiResponse(responseCode = "422", description = "Login já cadastrado no sistema")
     })
-    ResponseEntity<UsuarioResponseDTO> autoCadastro(@RequestBody @Valid UsuarioRequestDTO dto);
+    ResponseEntity<UsuarioResponseDTO> autoCadastro(@RequestBody @Valid UsuarioCadastroRequestDTO dto);
 }
