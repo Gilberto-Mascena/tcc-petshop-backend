@@ -1,5 +1,6 @@
 package br.com.gilbertodev.apipetshop.services;
 
+import br.com.gilbertodev.apipetshop.dtos.usuario.UsuarioCadastroRequestDTO;
 import br.com.gilbertodev.apipetshop.dtos.usuario.UsuarioRequestDTO;
 import br.com.gilbertodev.apipetshop.dtos.usuario.UsuarioResponseDTO;
 import br.com.gilbertodev.apipetshop.entities.Role;
@@ -34,17 +35,18 @@ public class UsuarioService {
     }
 
     @Transactional
-    public UsuarioResponseDTO cadastrarCliente(UsuarioRequestDTO dto) {
+    public UsuarioResponseDTO cadastrarCliente(UsuarioCadastroRequestDTO dto) {
         if (usuarioRepository.existsByLogin(dto.login())) {
             throw new BusinessException(UsuarioMessages.LOGIN_JA_CADASTRADO);
         }
+
+        Usuario usuario = usuarioMapper.toEntityFromCadastro(dto);
 
         Set<Role> roles = new HashSet<>();
         Role rolePadrao = roleRepository.findByNome("ROLE_CLIENTE")
                 .orElseThrow(() -> new BusinessException(UsuarioMessages.ROLE_NAO_ENCONTRADA));
         roles.add(rolePadrao);
 
-        Usuario usuario = usuarioMapper.toEntity(dto);
         usuario.setLogin(dto.login());
         usuario.setSenha(passwordEncoder.encode(dto.password()));
         usuario.setRoles(roles);
