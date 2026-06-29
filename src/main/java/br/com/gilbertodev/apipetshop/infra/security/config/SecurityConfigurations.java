@@ -1,7 +1,7 @@
 package br.com.gilbertodev.apipetshop.infra.security.config;
 
+import br.com.gilbertodev.apipetshop.infra.security.filter.SecurityFilter;
 import br.com.gilbertodev.apipetshop.infra.security.handler.CustomAccessDeniedHandler;
-import br.com.gilbertodev.apipetshop.security.filter.SecurityFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
