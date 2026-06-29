@@ -1,5 +1,6 @@
 package br.com.gilbertodev.apipetshop.mapper;
 
+import br.com.gilbertodev.apipetshop.dtos.usuario.UsuarioCadastroRequestDTO;
 import br.com.gilbertodev.apipetshop.dtos.usuario.UsuarioRequestDTO;
 import br.com.gilbertodev.apipetshop.dtos.usuario.UsuarioResponseDTO;
 import br.com.gilbertodev.apipetshop.entities.Role;
@@ -43,5 +44,15 @@ public class UsuarioMapper {
         if (dto.login() != null && !dto.login().isBlank()) {
             usuario.setLogin(dto.login());
         }
+    }
+
+    public Usuario toEntityFromCadastro(UsuarioCadastroRequestDTO dto) {
+
+        if (dto == null) return null;
+
+        Usuario usuario = new Usuario();
+        usuario.setLogin(dto.login());
+        usuario.setSenha(dto.password());
+        return usuario;
     }
 }
