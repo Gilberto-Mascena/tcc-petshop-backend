@@ -30,15 +30,10 @@ public class UsuarioInicialConfig implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        if (roleRepository.count() == 0) {
-
-            roleRepository.save(new Role("ROLE_ADMIN"));
-            roleRepository.save(new Role("ROLE_GERENTE"));
-            roleRepository.save(new Role("ROLE_ATENDENTE"));
-            roleRepository.save(new Role("ROLE_CLIENTE"));
-
-            log.info(">>> [SEED] Roles iniciais criadas com sucesso!");
-        }
+        criarRoleSeNaoExistir("ROLE_ADMIN");
+        criarRoleSeNaoExistir("ROLE_GERENTE");
+        criarRoleSeNaoExistir("ROLE_ATENDENTE");
+        criarRoleSeNaoExistir("ROLE_CLIENTE");
 
         if (usuarioRepository.count() == 0) {
 
@@ -56,6 +51,14 @@ public class UsuarioInicialConfig implements CommandLineRunner {
 
         } else {
             log.info(">>> [SEED] Usuários já detectados no banco. Pulando criação inicial.");
+        }
+    }
+
+    private void criarRoleSeNaoExistir(String nomeRole) {
+
+        if (!roleRepository.existsByNome(nomeRole)) {
+            roleRepository.save(new Role(nomeRole));
+            log.info(">>> [SEED] Role '{}' criada com sucesso!", nomeRole);
         }
     }
 }
