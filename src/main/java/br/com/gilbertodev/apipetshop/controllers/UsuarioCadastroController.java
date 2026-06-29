@@ -1,7 +1,7 @@
 package br.com.gilbertodev.apipetshop.controllers;
 
 import br.com.gilbertodev.apipetshop.doc.UsuarioCadastroControllerDoc;
-import br.com.gilbertodev.apipetshop.dtos.usuario.UsuarioRequestDTO;
+import br.com.gilbertodev.apipetshop.dtos.usuario.UsuarioCadastroRequestDTO;
 import br.com.gilbertodev.apipetshop.dtos.usuario.UsuarioResponseDTO;
 import br.com.gilbertodev.apipetshop.services.UsuarioService;
 import jakarta.validation.Valid;
@@ -26,7 +26,7 @@ public class UsuarioCadastroController implements UsuarioCadastroControllerDoc {
 
     @Override
     @PostMapping("/cadastro")
-    public ResponseEntity<UsuarioResponseDTO> autoCadastro(@RequestBody @Valid UsuarioRequestDTO dto) {
+    public ResponseEntity<UsuarioResponseDTO> autoCadastro(@RequestBody @Valid UsuarioCadastroRequestDTO dto) {
         UsuarioResponseDTO response = usuarioService.cadastrarCliente(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
